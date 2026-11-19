@@ -58,6 +58,14 @@ TEMP_MIN_K = 200.0        # about -73 C, far below any Minneapolis record
 TEMP_MAX_K = 330.0        # about 57 C
 RAIN_MAX_MM = 200.0       # one hour of rain; the raw file contains 9,831.3 mm
 
+# traffic_volume is the target, so it is FLAGGED, never imputed (see pipeline step 8)
+DAYTIME_START_HOUR = 6
+DAYTIME_END_HOUR = 21
+MIN_DAYTIME_VOLUME = 100  # daytime hours below this look like road closures
+
+# Gaps longer than this are reported in the log (L2: nine missing months)
+GAP_WARNING_DAYS = 7
+
 # --------------------------------------------------------------------------
 # D5: three congestion definitions, each required by a different task
 # --------------------------------------------------------------------------
