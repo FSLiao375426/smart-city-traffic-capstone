@@ -1,24 +1,24 @@
-2026-11-20 00:40:07 | INFO     | __main__ | Pipeline started
-2026-11-20 00:40:07 | INFO     | __main__ | Loaded raw file Metro_Interstate_Traffic_Volume.csv: 48204 rows, 9 columns
-2026-11-20 00:40:07 | INFO     | __main__ | Schema validated: all 9 expected columns present
-2026-11-20 00:40:07 | INFO     | __main__ | Column 'weather_main' already consistent, no values changed
-2026-11-20 00:40:07 | WARNING  | __main__ | Standardised spacing or capitalisation of 1730 value(s) in 'weather_description'
-2026-11-20 00:40:07 | WARNING  | __main__ | Filled 48143 missing value(s) in 'holiday' with the label 'None'
-2026-11-20 00:40:08 | INFO     | __main__ | Parsed date_time for 48204 rows, range 2012-10-02 09:00:00 to 2018-09-30 23:00:00
-2026-11-20 00:40:08 | WARNING  | __main__ | Dropped 17 exact duplicate row(s) (identical in every column)
-2026-11-20 00:40:08 | WARNING  | __main__ | Collapsed to hourly grain: removed 7612 row(s); 5430 hour(s) had several weather labels, kept the most severe weather_main for each
-2026-11-20 00:40:08 | INFO     | __main__ | Hourly table has 40575 unique hours
-2026-11-20 00:40:08 | DEBUG    | __main__ | 'temp' 2014-01: imputed 4 value(s) with 2014-01 median = 259.91
-2026-11-20 00:40:09 | DEBUG    | __main__ | 'temp' 2014-02: imputed 6 value(s) with 2014-02 median = 259.52
-2026-11-20 00:40:09 | WARNING  | __main__ | Imputed 10 value(s) in 'temp' with monthly medians: temperature outside 200-330 K (e.g. 0 K sensor errors)
-2026-11-20 00:40:09 | DEBUG    | __main__ | 'rain_1h' 2016-07: imputed 1 value(s) with 2016-07 median = 0.00
-2026-11-20 00:40:09 | WARNING  | __main__ | Imputed 1 value(s) in 'rain_1h' with monthly medians: hourly rainfall outside 0-200 mm (e.g. 9,831 mm)
-2026-11-20 00:40:09 | INFO     | __main__ | No invalid values found in 'snow_1h'
-2026-11-20 00:40:09 | INFO     | __main__ | No invalid values found in 'clouds_all'
-2026-11-20 00:40:09 | WARNING  | __main__ | Flagged 20 daytime hour(s) with traffic_volume < 100 as traffic_anomaly (likely road closures, kept but flagged) on 4 day(s): 2015-07-25, 2016-07-09, 2016-07-23, 2016-07-24
-2026-11-20 00:40:09 | WARNING  | __main__ | Extended holiday labels from the midnight hour to the whole day: 53 -> 1203 flagged hours across 53 holiday dates
-2026-11-20 00:40:09 | WARNING  | __main__ | Coverage gap of 10 days with no data, from 2013-10-27 01:00:00 to 2013-11-06 04:00:00 (yearly totals are affected)
-2026-11-20 00:40:09 | WARNING  | __main__ | Coverage gap of 307 days with no data, from 2014-08-08 01:00:00 to 2015-06-11 20:00:00 (yearly totals are affected)
-2026-11-20 00:40:09 | INFO     | __main__ | Time coverage: 40575 of 52551 possible hours present (77.2%)
-2026-11-20 00:40:10 | INFO     | __main__ | Saved cleaned data to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_clean.csv: 40575 rows, 12 columns
-2026-11-20 00:40:10 | INFO     | __main__ | Pipeline finished successfully
+2026-11-20 01:18:10 | INFO     | __main__ | Pipeline started
+2026-11-20 01:18:10 | INFO     | __main__ | Loaded raw file Metro_Interstate_Traffic_Volume.csv: 48204 rows, 9 columns
+2026-11-20 01:18:10 | INFO     | __main__ | Schema validated: all 9 expected columns present
+2026-11-20 01:18:10 | INFO     | __main__ | Column 'weather_main' already consistent, no values changed
+2026-11-20 01:18:10 | WARNING  | __main__ | Standardised spacing or capitalisation of 1730 value(s) in 'weather_description'
+2026-11-20 01:18:10 | WARNING  | __main__ | Filled 48143 missing value(s) in 'holiday' with the label 'None'
+2026-11-20 01:18:10 | INFO     | __main__ | Parsed date_time for 48204 rows, range 2012-10-02 09:00:00 to 2018-09-30 23:00:00
+2026-11-20 01:18:11 | WARNING  | __main__ | Dropped 17 exact duplicate row(s) (identical in every column)
+2026-11-20 01:18:11 | WARNING  | __main__ | Collapsed to hourly grain: removed 7612 row(s); 5430 hour(s) had several weather labels, kept the most severe weather_main for each
+2026-11-20 01:18:11 | INFO     | __main__ | Hourly table has 40575 unique hours
+2026-11-20 01:18:11 | DEBUG    | __main__ | 'temp' 2014-01: imputed 4 value(s) with 2014-01 median = 259.91
+2026-11-20 01:18:11 | DEBUG    | __main__ | 'temp' 2014-02: imputed 6 value(s) with 2014-02 median = 259.52
+2026-11-20 01:18:11 | WARNING  | __main__ | Imputed 10 value(s) in 'temp' with monthly medians: temperature outside 200-330 K (e.g. 0 K sensor errors)
+2026-11-20 01:18:11 | DEBUG    | __main__ | 'rain_1h' group 'very heavy rain': imputed 1 value(s) with group median = 18.80 (from 7 valid hours)
+2026-11-20 01:18:11 | WARNING  | __main__ | Imputed 1 value(s) in 'rain_1h' with the median of the same weather_description: hourly rainfall outside 0-200 mm (e.g. 9,831 mm)
+2026-11-20 01:18:11 | INFO     | __main__ | No invalid values found in 'snow_1h'
+2026-11-20 01:18:11 | INFO     | __main__ | No invalid values found in 'clouds_all'
+2026-11-20 01:18:11 | WARNING  | __main__ | Flagged 20 daytime hour(s) with traffic_volume < 100 as traffic_anomaly (likely road closures, kept but flagged) on 4 day(s): 2015-07-25, 2016-07-09, 2016-07-23, 2016-07-24
+2026-11-20 01:18:11 | WARNING  | __main__ | Extended holiday labels from the midnight hour to the whole day: 53 -> 1203 flagged hours across 53 holiday dates
+2026-11-20 01:18:11 | WARNING  | __main__ | Coverage gap of 10 days with no data, from 2013-10-27 01:00:00 to 2013-11-06 04:00:00 (yearly totals are affected)
+2026-11-20 01:18:11 | WARNING  | __main__ | Coverage gap of 307 days with no data, from 2014-08-08 01:00:00 to 2015-06-11 20:00:00 (yearly totals are affected)
+2026-11-20 01:18:11 | INFO     | __main__ | Time coverage: 40575 of 52551 possible hours present (77.2%)
+2026-11-20 01:18:12 | INFO     | __main__ | Saved cleaned data to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_clean.csv: 40575 rows, 12 columns
+2026-11-20 01:18:12 | INFO     | __main__ | Pipeline finished successfully

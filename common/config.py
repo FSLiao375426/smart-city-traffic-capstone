@@ -57,6 +57,11 @@ WEATHER_SEVERITY = {
 TEMP_MIN_K = 200.0        # about -73 C, far below any Minneapolis record
 TEMP_MAX_K = 330.0        # about 57 C
 RAIN_MAX_MM = 200.0       # one hour of rain; the raw file contains 9,831.3 mm
+                          # (55.6 mm, a real "very heavy rain" hour, must stay valid)
+
+# D11: rainfall is imputed with the median of the same weather_description.
+# A group needs at least this many valid hours, otherwise the monthly median is used.
+MIN_GROUP_SIZE = 5
 
 # traffic_volume is the target, so it is FLAGGED, never imputed (see pipeline step 8)
 DAYTIME_START_HOUR = 6

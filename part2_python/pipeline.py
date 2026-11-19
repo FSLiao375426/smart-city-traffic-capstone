@@ -218,6 +218,54 @@ def impute_with_monthly_median(df: pd.DataFrame, column: str, invalid: pd.Series
     return df
 
 
+def impute_with_group_median(
+    df: pd.DataFrame, column: str, invalid: pd.Series, group_column: str, reason: str
+) -> pd.DataFrame:
+    """Replace invalid values with the median of valid values in the same group.
+
+    Used for rainfall (D11): rain depends on the weather condition far more
+    than on the month. The 9,831 mm reading is labelled "very heavy rain",
+    so a monthly median of 0 mm would contradict its own label.
+    Groups with fewer than MIN_GROUP_SIZE valid values fall back to the
+    monthly median.
+    """
+    n_invalid = int(invalid.sum())
+    if n_invalid == 0:
+        logger.info("No invalid values found in '%s'", column)
+        return df
+
+    df = df.copy()
+    fallback_rows = pd.Series(False, index=df.index)
+
+    for group in sorted(df.loc[invalid, group_column].unique()):
+        in_group = df[group_column] == group
+        targets = in_group & invalid
+        valid_values = df.loc[in_group & ~invalid, column]
+
+        if len(valid_values) >= config.MIN_GROUP_SIZE:
+            median = valid_values.median()
+            df.loc[targets, column] = median
+            logger.debug(
+                "'%s' group '%s': imputed %d value(s) with group median = %.2f (from %d valid hours)",
+                column, group, int(targets.sum()), median, len(valid_values),
+            )
+        else:
+            fallback_rows |= targets
+            logger.debug(
+                "'%s' group '%s' has only %d valid hours, falling back to monthly median",
+                column, group, len(valid_values),
+            )
+
+    if fallback_rows.any():
+        df = impute_with_monthly_median(df, column, fallback_rows, reason + " (fallback)")
+
+    logger.warning(
+        "Imputed %d value(s) in '%s' with the median of the same %s: %s",
+        n_invalid, column, group_column, reason,
+    )
+    return df
+
+
 def handle_impossible_values(df: pd.DataFrame) -> pd.DataFrame:
     """Detect physically impossible readings and repair the input features."""
     temp_bad = (df["temp"] < config.TEMP_MIN_K) | (df["temp"] > config.TEMP_MAX_K)
@@ -227,8 +275,8 @@ def handle_impossible_values(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     rain_bad = (df["rain_1h"] < 0) | (df["rain_1h"] > config.RAIN_MAX_MM)
-    df = impute_with_monthly_median(
-        df, "rain_1h", rain_bad,
+    df = impute_with_group_median(
+        df, "rain_1h", rain_bad, "weather_description",
         f"hourly rainfall outside 0-{config.RAIN_MAX_MM:.0f} mm (e.g. 9,831 mm)",
     )
 
