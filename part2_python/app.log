@@ -1,0 +1,12 @@
+2026-11-23 19:45:15 | INFO     | __main__ | Command 'compare' invoked with arguments {}
+2026-11-23 19:45:15 | INFO     | __main__ | compare answered
+2026-11-23 19:45:58 | INFO     | __main__ | Command 'peaks' invoked with arguments {'day_type': 'weekday', 'top': 5}
+2026-11-23 19:45:58 | INFO     | __main__ | peaks answered: top hour 16:00
+2026-11-23 19:46:27 | INFO     | __main__ | Command 'day' invoked with arguments {'date': '2016-07-04'}
+2026-11-23 19:46:27 | INFO     | __main__ | day summary answered for 2016-07-04: 24 hours
+2026-11-23 19:47:23 | INFO     | __main__ | Command 'recommend' invoked with arguments {'day_type': 'weekday', 'earliest': 6, 'latest': 10, 'window': 2, 'weather': None}
+2026-11-23 19:47:23 | INFO     | __main__ | recommend answered: best window starts 09:00
+2026-11-23 19:48:27 | INFO     | __main__ | Command 'query' invoked with arguments {'datetime': '2015-01-01 08:00'}
+2026-11-23 19:48:27 | ERROR    | __main__ | Invalid input for 'query': No record for 2015-01-01 08:00: the sensor has no data for that hour (for example the Sep 2014 - May 2015 gap)
+2026-11-23 19:49:03 | INFO     | __main__ | Command 'query' invoked with arguments {'datetime': '2017-13-01 8am'}
+2026-11-23 19:49:03 | ERROR    | __main__ | Invalid input for 'query': Invalid date/time '2017-13-01 8am'. Use the format YYYY-MM-DD HH:MM, e.g. 2017-06-01 08:00
