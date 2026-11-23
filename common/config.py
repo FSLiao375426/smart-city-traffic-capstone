@@ -77,6 +77,7 @@ GAP_WARNING_DAYS = 7
 CONGESTION_THRESHOLD = 5500                 # Part 1 Task 3: congested = volume > 5,500
 CATEGORY_BANDS = (4500, 5500)               # Part 1 Task 4: Low < 4,500 <= Medium <= 5,500 < High
 HIGH_TEMP_K = 292.0                         # Part 1 Task 3.2: high temperature > 292 K
+PEAK_HOURS = [6, 7, 8, 15, 16, 17]          # hours where congestion actually occurs (>40% of hours)
 # Part 3 uses data-driven quartiles of traffic_volume, computed at run time.
 
 # --------------------------------------------------------------------------

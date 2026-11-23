@@ -1,0 +1,56 @@
+{
+  "descriptive": {
+    "n_hours": 40575,
+    "mean": 3290.650474430068,
+    "median": 3427.0,
+    "std": 1984.7729092722152,
+    "variance": 3939323.501380893,
+    "min": 0,
+    "max": 7280,
+    "range": 7280,
+    "q1": 1248.5,
+    "q3": 4952.0,
+    "coefficient_of_variation": 0.6031551891320128,
+    "skewness": -0.10736159957193382
+  },
+  "correlation": {
+    "pearson_r": 0.13960346844613503,
+    "pearson_p_value": 1.1265986794864567e-175,
+    "r_squared": 0.019489128402191018,
+    "spearman_rho": 0.14043564805269224,
+    "r_after_removing_hour_of_day": 0.09010233531319521,
+    "r_temp_vs_hourly_mean_temp": 0.19382248067855848
+  },
+  "probability": {
+    "n_hours": 40575,
+    "n_congested": 6107,
+    "P(Congestion)": 0.1505113986444855,
+    "P(Clear)": 0.3293653727664818,
+    "P(Congestion AND Clear)": 0.04342575477510782,
+    "P(Clear | Congestion)": 0.2885213689209104,
+    "P(High temp)": 0.25944547134935303,
+    "P(High temp | Congestion)": 0.2782053381365646,
+    "P(Congestion | Clear)": 0.13184675246932057,
+    "P(Congestion | Clouds)": 0.17099781789327514,
+    "P(C) x P(Clear) if independent": 0.04957324292014552,
+    "observed / expected ratio": 0.8759918096352843,
+    "chi_square": 54.07794799872012,
+    "chi_square_p_value": 1.9269173944370637e-13,
+    "contingency_clear_vs_clouds": {
+      "C&Clear": 1762,
+      "notC&Clear": 11602,
+      "C&Clouds": 2586,
+      "notC&Clouds": 12537
+    },
+    "odds_congestion_clear": 0.15187036717807276,
+    "odds_congestion_clouds": 0.20626944245034698,
+    "odds_ratio_clear_vs_clouds": 0.7362717684885917,
+    "odds_ratio_95ci": [
+      0.6895226724181306,
+      0.7861904165851533
+    ],
+    "odds_ratio_adjusted_for_hour (Mantel-Haenszel)": 1.0061703985717136,
+    "P(Congestion | Clear, peak hours)": 0.5467176102813477,
+    "P(Congestion | Clouds, peak hours)": 0.5782095425479586
+  }
+}
