@@ -17,3 +17,12 @@ def load_clean(path: Path = config.CLEAN_CSV) -> pd.DataFrame:
     df = pd.read_csv(path, keep_default_na=False, na_values=[""], parse_dates=["date_time"])
     df["holiday"] = df["holiday"].astype("string")
     return df
+
+
+def load_features(path: Path = config.FEATURES_CSV) -> pd.DataFrame:
+    """Read traffic_features.csv with the same "None" handling as load_clean()."""
+    df = pd.read_csv(path, keep_default_na=False, na_values=[""], parse_dates=["date_time"])
+    for column in ["holiday", "weather_main", "weather_description", "day_name", "day_type",
+                   "time_of_day", "traffic_category", "congestion_category"]:
+        df[column] = df[column].astype("string")
+    return df
