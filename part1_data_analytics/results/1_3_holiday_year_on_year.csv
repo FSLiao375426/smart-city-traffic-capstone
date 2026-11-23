@@ -1,0 +1,9 @@
+holiday,year,avg_temp_c,temp_change_c,avg_traffic,traffic_change
+New Years Day,2014,-18.7,,1637.0,
+New Years Day,2016,-6.1,12.6,1832.0,195.0
+New Years Day,2017,-1.3,4.8,2091.0,259.0
+New Years Day,2018,-22.2,-20.9,1749.0,-342.0
+Labor Day,2015,22.2,,2430.0,
+Labor Day,2016,21.9,-0.3,2152.0,-279.0
+Labor Day,2017,18.1,-3.7,2395.0,244.0
+Labor Day,2018,20.8,2.7,2324.0,-71.0

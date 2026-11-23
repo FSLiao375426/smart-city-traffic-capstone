@@ -10,6 +10,7 @@ env/
 
 # Generated data (rebuilt by running the pipeline)
 data/processed/*.csv
+part1_data_analytics/traffic.db
 
 # MLflow working files (selected runs are exported separately for grading)
 mlruns/.trash/

@@ -1,0 +1,5 @@
+day_type,month,hours,avg_traffic,avg_temp_c
+New Years Day,01,112,1795.0,-12.4
+Ordinary day (same month),01,3074,3114.0,-8.7
+Labor Day,09,118,2346.0,19.7
+Ordinary day (same month),09,3113,3356.0,18.0
