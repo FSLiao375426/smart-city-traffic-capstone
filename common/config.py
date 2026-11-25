@@ -91,3 +91,10 @@ LOW_VISIBILITY = ["Fog", "Mist", "Haze", "Smoke"]
 # D7: chronological train/test split (hourly traffic is autocorrelated)
 # --------------------------------------------------------------------------
 TEST_START = "2018-01-01"
+
+# --------------------------------------------------------------------------
+# Part 3 association rules (Apriori)
+# --------------------------------------------------------------------------
+APRIORI_MIN_SUPPORT = 0.01      # an itemset must cover at least 1% of hours (~400)
+APRIORI_MIN_CONFIDENCE = 0.5    # a rule must be right at least half the time
+KMEANS_MAX_K = 6                # largest number of clusters still easy to interpret

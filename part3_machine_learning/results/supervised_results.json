@@ -1,0 +1,56 @@
+{
+  "regression": [
+    {
+      "model": "linear_regression",
+      "MAE": 805.6953,
+      "RMSE": 1016.7685,
+      "R2": 0.7348,
+      "train_R2": 0.7316,
+      "fit_seconds": 0.0843
+    },
+    {
+      "model": "random_forest",
+      "MAE": 221.7781,
+      "RMSE": 375.5458,
+      "R2": 0.9638,
+      "train_R2": 0.9816,
+      "fit_seconds": 3.5138
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "MAE": 216.5987,
+      "RMSE": 361.8432,
+      "R2": 0.9664,
+      "train_R2": 0.9732,
+      "fit_seconds": 1.3273
+    }
+  ],
+  "classification": [
+    {
+      "model": "logistic_regression",
+      "accuracy": 0.9588,
+      "precision": 0.6905,
+      "recall": 0.9916,
+      "F1": 0.8141,
+      "ROC_AUC": 0.9938
+    },
+    {
+      "model": "random_forest",
+      "accuracy": 0.9835,
+      "precision": 0.8481,
+      "recall": 0.9966,
+      "F1": 0.9164,
+      "ROC_AUC": 0.9974
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "accuracy": 0.9855,
+      "precision": 0.8675,
+      "recall": 0.9916,
+      "F1": 0.9254,
+      "ROC_AUC": 0.9976
+    }
+  ],
+  "test_period": "2018-01-01 to 2018-09-30",
+  "train_period": "2012-10-02 to 2017-12-31"
+}
