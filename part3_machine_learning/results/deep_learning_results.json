@@ -1,0 +1,58 @@
+{
+  "lstm": {
+    "MAE": 163.5382843017578,
+    "R2": 0.9853036999702454
+  },
+  "baseline_last_hour": {
+    "MAE": 588.4197387695312,
+    "R2": 0.829889178276062
+  },
+  "baseline_same_hour_yesterday": {
+    "MAE": 567.267822265625,
+    "R2": 0.726202130317688
+  },
+  "train_sequences": 22604,
+  "test_sequences": 6247,
+  "shap_top_features": [
+    {
+      "feature": "hour_cos",
+      "mean_abs_shap": 1391.9
+    },
+    {
+      "feature": "hour",
+      "mean_abs_shap": 417.6
+    },
+    {
+      "feature": "day_of_week",
+      "mean_abs_shap": 313.6
+    },
+    {
+      "feature": "hour_sin",
+      "mean_abs_shap": 127.7
+    },
+    {
+      "feature": "dow_sin",
+      "mean_abs_shap": 78.3
+    },
+    {
+      "feature": "temp_c",
+      "mean_abs_shap": 55.4
+    },
+    {
+      "feature": "is_holiday",
+      "mean_abs_shap": 53.7
+    },
+    {
+      "feature": "dow_cos",
+      "mean_abs_shap": 43.1
+    },
+    {
+      "feature": "month_sin",
+      "mean_abs_shap": 33.9
+    },
+    {
+      "feature": "month_cos",
+      "mean_abs_shap": 29.9
+    }
+  ]
+}
