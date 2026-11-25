@@ -46,15 +46,15 @@ All scripts are run **from the repository root** with `python -m`, so the shared
 
 Decisions that keep the three parts consistent. All constants live in `common/config.py`.
 
-| ID  | Decision                                                                                                                                                    | Reason                                                                                                                                                 |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| D1  | One row per hour. When an hour has several weather labels, keep the most severe `weather_main` (order in `WEATHER_SEVERITY`).                               | The raw file has 48,204 rows but only 40,575 distinct hours. Duplicated hours are mostly bad-weather hours, so leaving them in biases every statistic. |
-| D2  | `data/processed/traffic_clean.csv`, produced by the Part 2 pipeline, is the single source of truth. Part 1 SQL applies the same collapse rule in a view.    | SQL and Python must report the same numbers.                                                                                                           |
-| D3  | Holiday flag extended from 00:00 to the whole calendar day.                                                                                                 | The raw flag marks only the midnight hour.                                                                                                             |
-| D4  | Impossible values (0 K temperature, 9,831 mm rain, zero traffic in busy hours) replaced with the median of the same calendar month.                         | Required by the brief, and Minnesota's seasonal swing makes a global mean misleading.                                                                  |
-| D5  | Three congestion definitions kept under distinct names: `congested` (> 5,500), `traffic_category` (4,500 / 5,500 bands), `congestion_category` (quartiles). | Each is required by a different task.                                                                                                                  |
-| D6  | `SEVERE_WEATHER` = Thunderstorm, Snow, Squall. `LOW_VISIBILITY` = Fog, Mist, Haze, Smoke.                                                                   | The brief uses both sets without defining them.                                                                                                        |
-| D7  | Chronological split: train to end of 2017, test on 2018.                                                                                                    | Hourly traffic is autocorrelated, so a random split leaks information.                                                                                 |
+| ID | Decision | Reason |
+| --- | --- | --- |
+| D1 | One row per hour. When an hour has several weather labels, keep the most severe `weather_main` (order in `WEATHER_SEVERITY`). | The raw file has 48,204 rows but only 40,575 distinct hours. Duplicated hours are mostly bad-weather hours, so leaving them in biases every statistic. |
+| D2 | `data/processed/traffic_clean.csv`, produced by the Part 2 pipeline, is the single source of truth. Part 1 SQL applies the same collapse rule in a view. | SQL and Python must report the same numbers. |
+| D3 | Holiday flag extended from 00:00 to the whole calendar day. | The raw flag marks only the midnight hour. |
+| D4 | Impossible values (0 K temperature, 9,831 mm rain, zero traffic in busy hours) replaced with the median of the same calendar month. | Required by the brief, and Minnesota's seasonal swing makes a global mean misleading. |
+| D5 | Three congestion definitions kept under distinct names: `congested` (> 5,500), `traffic_category` (4,500 / 5,500 bands), `congestion_category` (quartiles). | Each is required by a different task. |
+| D6 | `SEVERE_WEATHER` = Thunderstorm, Snow, Squall. `LOW_VISIBILITY` = Fog, Mist, Haze, Smoke. | The brief uses both sets without defining them. |
+| D7 | Chronological split: train to end of 2017, test on 2018. | Hourly traffic is autocorrelated, so a random split leaks information. |
 
 ## Known data limitations
 
@@ -79,6 +79,16 @@ python -m part1_data_analytics.stats_probability
 
 # Part 2 command-line app (see part2_python/README.md for all commands)
 python -m part2_python.traffic_app compare
+
+# Part 3 machine learning
+python -m part3_machine_learning.supervised
+python -m part3_machine_learning.unsupervised
+python -m part3_machine_learning.deep_learning
+python -m part3_machine_learning.monitoring
+python -m part3_machine_learning.fairness_analysis
+python -m part3_machine_learning.api_demo
+python -m part3_machine_learning.recommender --date 2018-12-25 --earliest 8 --latest 18 --window 2
+uvicorn part3_machine_learning.api:app --port 8000      # API, then open http://127.0.0.1:8000/docs
 ```
 
 The Power BI dashboard is `part1_data_analytics/powerbi/traffic_dashboard.pbix`, with a PDF export next to it.
@@ -87,7 +97,8 @@ The Power BI dashboard is `part1_data_analytics/powerbi/traffic_dashboard.pbix`,
 | --- | --- | --- |
 | 1 Data analytics | [`part1_data_analytics/INSIGHTS_REPORT.md`](part1_data_analytics/INSIGHTS_REPORT.md) | [`part1_data_analytics/README.md`](part1_data_analytics/README.md) |
 | 2 Python pipeline | [`part2_python/REPORT.md`](part2_python/REPORT.md) | [`part2_python/README.md`](part2_python/README.md) |
-| 3 Machine learning | *in progress* | |
+| 3 Machine learning | [`final_capstone_report/FINAL_REPORT.md`](final_capstone_report/FINAL_REPORT.md) | [`part3_machine_learning/README.md`](part3_machine_learning/README.md) |
+| Responsible AI | [`final_capstone_report/BIAS_FAIRNESS_REPORT.md`](final_capstone_report/BIAS_FAIRNESS_REPORT.md) | |
 
 ## Logging
 
@@ -98,6 +109,8 @@ Every module uses `logging.getLogger(__name__)`, and only entry-point scripts co
 | `part2_python/pipeline.log` | pipeline (fresh log), then feature engineering and figures (appended) |
 | `part2_python/app.log` | command-line app (appended, console shows only warnings and errors) |
 | `part1_data_analytics/part1.log` | SQLite load (fresh log), then SQL analysis and statistics (appended) |
+| `part3_machine_learning/part3.log` | supervised models (fresh log), then clustering, LSTM, monitoring and error analysis (appended) |
+| `part3_machine_learning/api.log` | every API request and its prediction |
 
 | Level | Meaning in this project |
 | --- | --- |
