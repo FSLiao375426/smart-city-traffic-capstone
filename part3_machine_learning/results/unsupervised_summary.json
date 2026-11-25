@@ -1,0 +1,87 @@
+{
+  "k": 5,
+  "clusters": [
+    {
+      "name": "Weekend off-peak hours, light traffic, fair weather",
+      "hours": 5425,
+      "avg_volume": 1200.456,
+      "congested_share": 0.0
+    },
+    {
+      "name": "Weekday off-peak hours, light traffic, fair weather",
+      "hours": 11732,
+      "avg_volume": 1473.457,
+      "congested_share": 0.0
+    },
+    {
+      "name": "Weekend daytime, busy traffic, fair weather",
+      "hours": 5820,
+      "avg_volume": 3910.24,
+      "congested_share": 0.007
+    },
+    {
+      "name": "Weekday mixed hours, busy traffic, rain or snow",
+      "hours": 5553,
+      "avg_volume": 4240.782,
+      "congested_share": 0.235
+    },
+    {
+      "name": "Weekday daytime, congested traffic, fair weather",
+      "hours": 12025,
+      "avg_volume": 5273.359,
+      "congested_share": 0.396
+    }
+  ],
+  "top_rules": [
+    {
+      "rule": "day=Weekend AND temp=Below 0C AND time=Night => congestion=Low",
+      "lift": 3.793,
+      "confidence": 0.947
+    },
+    {
+      "rule": "day=Weekend AND temp=Above 20C AND time=Evening peak => congestion=High",
+      "lift": 3.667,
+      "confidence": 0.917
+    },
+    {
+      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Rain => congestion=Severe",
+      "lift": 3.647,
+      "confidence": 0.912
+    },
+    {
+      "rule": "day=Weekend AND time=Night AND weather=Clouds => congestion=Low",
+      "lift": 3.642,
+      "confidence": 0.909
+    },
+    {
+      "rule": "day=Weekend AND time=Night => congestion=Low",
+      "lift": 3.591,
+      "confidence": 0.896
+    },
+    {
+      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Clear => congestion=Severe",
+      "lift": 3.583,
+      "confidence": 0.896
+    },
+    {
+      "rule": "day=Weekday AND temp=Above 20C AND time=Night => congestion=Low",
+      "lift": 3.574,
+      "confidence": 0.892
+    },
+    {
+      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak => congestion=Severe",
+      "lift": 3.566,
+      "confidence": 0.892
+    },
+    {
+      "rule": "day=Weekend AND temp=0-20C AND time=Night => congestion=Low",
+      "lift": 3.546,
+      "confidence": 0.885
+    },
+    {
+      "rule": "day=Weekend AND time=Night AND weather=Clear => congestion=Low",
+      "lift": 3.525,
+      "confidence": 0.88
+    }
+  ]
+}
