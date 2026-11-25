@@ -156,6 +156,14 @@ def collapse_to_hourly(df: pd.DataFrame) -> pd.DataFrame:
         _severity=df["weather_main"].map(config.WEATHER_SEVERITY),
     )
 
+    # D21: remember every distinct label of the hour, most severe first
+    labels_by_hour = (
+        df.sort_values("_severity")
+          .groupby("date_time")["weather_main"]
+          .agg(lambda s: "|".join(dict.fromkeys(s)))
+    )
+    df["weather_labels"] = df["date_time"].map(labels_by_hour).astype("string")
+
     before = len(df)
     df = (
         df.sort_values(["date_time", "_severity"])          # most severe first within each hour
@@ -165,14 +173,19 @@ def collapse_to_hourly(df: pd.DataFrame) -> pd.DataFrame:
     )
     removed = before - len(df)
     n_multi = int((df["weather_label_count"] > 1).sum())
+    n_distinct_multi = int(df["weather_labels"].str.contains("|", regex=False).sum())
 
     if not df["date_time"].is_unique:
         raise PipelineError("Hourly collapse failed: date_time is still not unique")
 
     logger.warning(
-        "Collapsed to hourly grain: removed %d row(s); %d hour(s) had several weather labels, "
+        "Collapsed to hourly grain: removed %d row(s); %d hour(s) had several weather rows, "
         "kept the most severe weather_main for each",
         removed, n_multi,
+    )
+    logger.info(
+        "Kept all weather labels in weather_labels: %d hour(s) have two or more different conditions",
+        n_distinct_multi,
     )
     logger.info("Hourly table has %d unique hours", len(df))
     return df
@@ -371,7 +384,7 @@ def final_checks_and_save(df: pd.DataFrame, output: Path) -> None:
     if nulls.any():
         raise PipelineError(f"Final check failed: missing values remain {nulls[nulls > 0].to_dict()}")
 
-    columns = config.EXPECTED_COLUMNS + ["weather_label_count", "is_holiday", "traffic_anomaly"]
+    columns = config.EXPECTED_COLUMNS + ["weather_labels", "weather_label_count", "is_holiday", "traffic_anomaly"]
     df = df.sort_values("date_time")[columns]
 
     output.parent.mkdir(parents=True, exist_ok=True)
