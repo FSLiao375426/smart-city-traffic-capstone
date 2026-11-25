@@ -61,7 +61,7 @@ def add_time_features(df: pd.DataFrame) -> pd.DataFrame:
     dt = df["date_time"]
     df = df.assign(
         hour=dt.dt.hour,
-        day_of_week=dt.dt.dayofweek,          # 0 = Monday ... 6 = Sunday
+        day_of_week=dt.dt.day_of_week,          # 0 = Monday ... 6 = Sunday
         day_name=dt.dt.day_name(),
         month=dt.dt.month,
         year=dt.dt.year,
