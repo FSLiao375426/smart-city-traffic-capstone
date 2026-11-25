@@ -1,78 +1,28 @@
-2026-11-25 01:54:02 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
-2026-11-25 01:54:02 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
-2026-11-25 01:54:02 | INFO     | __main__ | Using 28 features: hour, day_of_week, is_weekend, month, hour_sin, hour_cos, dow_sin, dow_cos, month_sin, month_cos, is_holiday, temp_c, rain_1h_log, snow_1h, clouds_all, weather_severity, is_precipitation, wx_Clear, wx_Clouds, wx_Drizzle, wx_Fog, wx_Haze, wx_Mist, wx_Rain, wx_Smoke, wx_Snow, wx_Squall, wx_Thunderstorm
-2026-11-25 01:54:02 | INFO     | part3_machine_learning.ml_common | Train: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
-2026-11-25 01:54:03 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'traffic_volume_regression' (store mlflow.db)
-2026-11-25 01:54:10 | INFO     | __main__ | Regression linear_regression        MAE   805.7  R2 0.735  (train R2 0.732, 0.1s)
-2026-11-25 01:54:13 | INFO     | __main__ | Regression random_forest            MAE   221.8  R2 0.964  (train R2 0.982, 3.5s)
-2026-11-25 01:54:20 | INFO     | __main__ | Regression hist_gradient_boosting   MAE   216.6  R2 0.966  (train R2 0.973, 1.3s)
-2026-11-25 01:54:20 | INFO     | __main__ | Best regression model: hist_gradient_boosting (MAE 216.6), saved for deployment
-2026-11-25 01:54:20 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'high_risk_classification' (store mlflow.db)
-2026-11-25 01:54:20 | INFO     | __main__ | high_risk positives: train 7.5%, test 9.1%
-2026-11-25 01:54:25 | INFO     | __main__ | Classification logistic_regression    acc 0.959  prec 0.691  rec 0.992  F1 0.814  AUC 0.994
-2026-11-25 01:54:26 | INFO     | __main__ | Classification random_forest          acc 0.983  prec 0.848  rec 0.997  F1 0.916  AUC 0.997
-2026-11-25 01:54:40 | INFO     | __main__ | Classification hist_gradient_boosting acc 0.985  prec 0.867  rec 0.992  F1 0.925  AUC 0.998
-2026-11-25 01:54:40 | INFO     | __main__ | Best classification model: hist_gradient_boosting (F1 0.925), saved
-2026-11-25 01:54:40 | INFO     | __main__ | Accuracy of always predicting 'not high risk' would be 0.909
-2026-11-25 01:54:40 | INFO     | __main__ | Saved supervised results to part3_machine_learning\results
-2026-11-25 01:54:50 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
-2026-11-25 01:54:50 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
-2026-11-25 01:55:00 | INFO     | __main__ | Chose k = 5: highest silhouette (0.356) for k <= 6. Larger k only splits existing groups (silhouette 0.392 at k = 8)
-2026-11-25 01:55:00 | INFO     | __main__ | Cluster 4 (5425 hours): Weekend off-peak hours, light traffic, fair weather, avg volume 1200, congested 0%
-2026-11-25 01:55:00 | INFO     | __main__ | Cluster 0 (11732 hours): Weekday off-peak hours, light traffic, fair weather, avg volume 1473, congested 0%
-2026-11-25 01:55:00 | INFO     | __main__ | Cluster 2 (5820 hours): Weekend daytime, busy traffic, fair weather, avg volume 3910, congested 1%
-2026-11-25 01:55:00 | INFO     | __main__ | Cluster 3 (5553 hours): Weekday mixed hours, busy traffic, rain or snow, avg volume 4241, congested 24%
-2026-11-25 01:55:00 | INFO     | __main__ | Cluster 1 (12025 hours): Weekday daytime, congested traffic, fair weather, avg volume 5273, congested 40%
-2026-11-25 01:55:01 | INFO     | __main__ | Saved figure part3_machine_learning\figures\kmeans_k_selection.png
-2026-11-25 01:55:02 | INFO     | __main__ | Saved figure part3_machine_learning\figures\kmeans_clusters.png
-2026-11-25 01:55:02 | INFO     | __main__ | Association rules: 40555 transactions, 21 items
-2026-11-25 01:55:02 | INFO     | __main__ | Kept 152 rules that predict a congestion level (support >= 0.010, confidence >= 0.50)
-2026-11-25 01:55:02 | INFO     | __main__ | Rule: day=Weekend AND temp=Below 0C AND time=Night => congestion=Low (support 0.022, confidence 0.95, lift 3.79)
-2026-11-25 01:55:02 | INFO     | __main__ | Rule: day=Weekend AND temp=Above 20C AND time=Evening peak => congestion=High (support 0.016, confidence 0.92, lift 3.67)
-2026-11-25 01:55:02 | INFO     | __main__ | Rule: day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Rain => congestion=Severe (support 0.011, confidence 0.91, lift 3.65)
-2026-11-25 01:55:02 | INFO     | __main__ | Rule: day=Weekend AND time=Night AND weather=Clouds => congestion=Low (support 0.017, confidence 0.91, lift 3.64)
-2026-11-25 01:55:02 | INFO     | __main__ | Rule: day=Weekend AND time=Night => congestion=Low (support 0.064, confidence 0.90, lift 3.59)
-2026-11-25 01:55:02 | INFO     | __main__ | Saved unsupervised results to part3_machine_learning\results
-2026-11-25 01:55:25 | WARNING  | __main__ | Built 28851 sequences of 24 hours; skipped 11700 positions that cross a data gap or target a flagged closure hour
-2026-11-25 01:55:25 | INFO     | __main__ | LSTM data: 22604 training and 6247 test sequences
-2026-11-25 01:55:28 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'traffic_volume_lstm' (store mlflow.db)
-2026-11-25 01:55:29 | WARNING  | tensorflow | TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
-2026-11-25 01:56:04 | INFO     | __main__ | LSTM trained for 15 epochs in 35s (all epochs run, validation loss still improving)
-2026-11-25 01:56:06 | INFO     | __main__ | LSTM test MAE 163.5, R2 0.985 | last-hour baseline MAE 588.4 | same-hour-yesterday MAE 567.3
-2026-11-25 01:56:07 | INFO     | __main__ | Saved figure part3_machine_learning\figures\lstm_test_week.png
-2026-11-25 01:56:07 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
-2026-11-25 01:56:07 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
-2026-11-25 01:56:07 | INFO     | part3_machine_learning.ml_common | Train: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
-2026-11-25 01:56:12 | INFO     | __main__ | SHAP: hour_cos           mean |contribution| 1392 vehicles
-2026-11-25 01:56:12 | INFO     | __main__ | SHAP: hour               mean |contribution| 418 vehicles
-2026-11-25 01:56:12 | INFO     | __main__ | SHAP: day_of_week        mean |contribution| 314 vehicles
-2026-11-25 01:56:12 | INFO     | __main__ | SHAP: hour_sin           mean |contribution| 128 vehicles
-2026-11-25 01:56:12 | INFO     | __main__ | SHAP: dow_sin            mean |contribution| 78 vehicles
-2026-11-25 01:56:13 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_summary.png
-2026-11-25 01:56:14 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_importance.png
-2026-11-25 01:56:14 | INFO     | __main__ | Saved deep learning results
-2026-11-25 01:56:21 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
-2026-11-25 01:56:21 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
-2026-11-25 01:56:22 | INFO     | __main__ | Baseline MAE 238.0 (model trained to 2016, validated on 2017)
-2026-11-25 01:56:22 | INFO     | __main__ | Reference: 6513 hours (Jan-Sep 2017). Current: 6533 hours (Jan-Sep 2018)
-2026-11-25 01:56:22 | INFO     | __main__ | Simulated incident: traffic x1.30 for 2923 hours from 2018-06-01
-2026-11-25 01:56:22 | WARNING  | __main__ | [Actual 2018] ALERT / Requires investigation: 2018-01 MAE x1.26; 2018-04 MAE x1.27
-2026-11-25 01:56:22 | WARNING  | __main__ | [Simulated surge] ALERT / Requires investigation: 2018-01 MAE x1.26; 2018-04 MAE x1.27; 2018-06 MAE x4.22; 2018-07 MAE x4.17; 2018-08 MAE x4.36; 2018-09 MAE x4.15
-2026-11-25 01:56:23 | INFO     | __main__ | Saved figure part3_machine_learning\figures\monitoring_dashboard.png
-2026-11-25 01:56:23 | INFO     | __main__ | Saved monitoring report and status
-2026-11-25 02:05:39 | INFO     | __main__ | recommender invoked with {'date': '2018-12-25', 'earliest': 8, 'latest': 18, 'window': 2, 'weather': 'Clear', 'temp': None}
-2026-11-25 02:05:41 | INFO     | __main__ | Recommendation for 2018-12-25 (Clear, weekday): best 08:00-10:00, 33% below busiest
-2026-11-25 02:06:59 | INFO     | __main__ | recommender invoked with {'date': '2018-11-14', 'earliest': 6, 'latest': 10, 'window': 1, 'weather': 'Snow', 'temp': -5.0}
-2026-11-25 02:07:01 | INFO     | __main__ | Recommendation for 2018-11-14 (Snow, weekday): best 10:00-11:00, 24% below busiest
-2026-11-25 11:07:34 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
-2026-11-25 11:07:34 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
-2026-11-25 11:07:35 | INFO     | part3_machine_learning.ml_common | Train: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
-2026-11-25 11:07:35 | INFO     | __main__ | Overall 2018 regression MAE 216.6 over 6533 hours
-2026-11-25 11:07:36 | INFO     | __main__ | Largest error by weather_main: Snow (MAE 540, 2.50x overall, 516 hours)
-2026-11-25 11:07:36 | WARNING  | __main__ | Errors are uneven across weather_main: Snow has 2.5x the overall MAE
-2026-11-25 11:07:36 | INFO     | __main__ | Largest error by time_of_day: Evening peak (MAE 307, 1.42x overall, 1092 hours)
-2026-11-25 11:07:36 | INFO     | __main__ | Largest error by day_type: Weekend (MAE 270, 1.24x overall, 1862 hours)
-2026-11-25 11:07:36 | INFO     | __main__ | Largest error by holiday_flag: Holiday (MAE 376, 1.74x overall, 167 hours)
-2026-11-25 11:07:36 | WARNING  | __main__ | Errors are uneven across holiday_flag: Holiday has 1.7x the overall MAE
-2026-11-25 11:07:36 | INFO     | __main__ | Largest error by month_name: 04 Apr (MAE 302, 1.39x overall, 720 hours)
-2026-11-25 11:07:36 | INFO     | __main__ | Saved error distribution analysis
+2026-11-26 04:59:12 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 04:59:12 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 04:59:12 | INFO     | __main__ | Using 28 features: hour, day_of_week, is_weekend, month, hour_sin, hour_cos, dow_sin, dow_cos, month_sin, month_cos, is_holiday, temp_c, rain_1h_log, snow_1h, clouds_all, weather_severity, is_precipitation, wx_Clear, wx_Clouds, wx_Drizzle, wx_Fog, wx_Haze, wx_Mist, wx_Rain, wx_Smoke, wx_Snow, wx_Squall, wx_Thunderstorm
+2026-11-26 04:59:12 | INFO     | part3_machine_learning.ml_common | Training: 25309 rows (2012-10-02 to 2016-12-31), validation: 8713 rows (2017-01-01 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-26 04:59:14 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'traffic_volume_regression' (store mlflow.db)
+2026-11-26 04:59:15 | INFO     | __main__ | [validation] regression Dummy (training mean)    MAE 1744.237  RMSE 1986.191  R2 -0.004
+2026-11-26 04:59:15 | INFO     | __main__ | [validation] regression Linear regression        MAE 801.583  RMSE 1030.334  R2 0.730
+2026-11-26 04:59:19 | INFO     | __main__ | [validation] regression Random forest            MAE 239.458  RMSE 379.476  R2 0.963
+2026-11-26 04:59:21 | INFO     | __main__ | [validation] regression Gradient boosting        MAE 235.891  RMSE 368.493  R2 0.965
+2026-11-26 04:59:21 | INFO     | __main__ | Chosen regression model on validation: Gradient boosting (best validation MAE (235.891)). Choice frozen before scoring the test year
+2026-11-26 04:59:21 | INFO     | __main__ | [test] regression Dummy (training mean)          MAE 1728.148  RMSE 1974.805  R2 -0.000
+2026-11-26 04:59:32 | INFO     | __main__ | [test] regression Linear regression              MAE 806.103  RMSE 1017.245  R2 0.735
+2026-11-26 04:59:46 | INFO     | __main__ | [test] regression Random forest                  MAE 220.437  RMSE 372.223  R2 0.964
+2026-11-26 05:00:06 | INFO     | __main__ | [test] regression Gradient boosting              MAE 213.226  RMSE 350.082  R2 0.969
+2026-11-26 05:00:06 | INFO     | __main__ | Saved chosen regression model (Gradient boosting, refitted on 2012-2017) to regression_model.joblib
+2026-11-26 05:00:06 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'high_risk_classification' (store mlflow.db)
+2026-11-26 05:00:06 | INFO     | __main__ | high_risk positives: training 8.9%, validation 11.5%, test 11.1%
+2026-11-26 05:00:06 | INFO     | __main__ | [validation] classification Dummy (always 'not high risk') accuracy 0.885  precision 0.000  recall 0.000  F1 0.000  ROC_AUC 0.500
+2026-11-26 05:00:07 | INFO     | __main__ | [validation] classification Logistic regression      accuracy 0.944  precision 0.678  recall 0.975  F1 0.800  ROC_AUC 0.990
+2026-11-26 05:00:09 | INFO     | __main__ | [validation] classification Random forest            accuracy 0.989  precision 0.928  recall 0.982  F1 0.954  ROC_AUC 0.999
+2026-11-26 05:00:12 | INFO     | __main__ | [validation] classification Gradient boosting        accuracy 0.990  precision 0.939  recall 0.975  F1 0.957  ROC_AUC 0.999
+2026-11-26 05:00:12 | INFO     | __main__ | Chosen classification model on validation: Gradient boosting (best validation F1 (0.957)). Choice frozen before scoring the test year
+2026-11-26 05:00:12 | INFO     | __main__ | [test] classification Dummy (always 'not high risk') accuracy 0.889  precision 0.000  recall 0.000  F1 0.000  ROC_AUC 0.500
+2026-11-26 05:00:24 | INFO     | __main__ | [test] classification Logistic regression            accuracy 0.919  precision 0.581  recall 0.979  F1 0.729  ROC_AUC 0.982
+2026-11-26 05:00:26 | INFO     | __main__ | [test] classification Random forest                  accuracy 0.982  precision 0.866  recall 0.996  F1 0.926  ROC_AUC 0.997
+2026-11-26 05:00:40 | INFO     | __main__ | [test] classification Gradient boosting              accuracy 0.984  precision 0.884  recall 0.983  F1 0.931  ROC_AUC 0.998
+2026-11-26 05:00:40 | INFO     | __main__ | Saved chosen classification model (Gradient boosting, refitted on 2012-2017) to classification_model.joblib
+2026-11-26 05:00:41 | INFO     | __main__ | Saved supervised results and model_selection.json to part3_machine_learning\results

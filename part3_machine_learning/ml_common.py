@@ -1,7 +1,7 @@
 """Shared building blocks for every Part 3 script.
 
 * one feature set used by all models (time, cyclical, weather, holiday)
-* one chronological train/test split (D7: train to 2017, test on 2018)
+* one chronological split (D19: train to 2016, validate on 2017, test on 2018)
 * one MLflow configuration (local SQLite store inside this folder)
 
 Keeping these in one place means every model is trained and judged on
@@ -60,15 +60,39 @@ def load_model_data() -> pd.DataFrame:
     return df
 
 
+def _describe(name: str, part: pd.DataFrame) -> str:
+    return f"{name}: {len(part)} rows ({part['date_time'].min().date()} to {part['date_time'].max().date()})"
+
+
 def time_split(df: pd.DataFrame):
-    """Chronological split (D7). Hourly traffic is autocorrelated, so a random
-    split would let the model see the neighbours of every test hour."""
+    """Development / test split (D7). Hourly traffic is autocorrelated, so a
+    random split would let the model see the neighbours of every test hour.
+
+    Development = training + validation years (to 2017). Final models are
+    refitted on it after the choice has been made on the validation year.
+    """
     test_mask = df["date_time"] >= pd.Timestamp(config.TEST_START)
     train, test = df[~test_mask], df[test_mask]
-    logger.info("Train: %d rows (%s to %s), test: %d rows (%s to %s)",
-                len(train), train["date_time"].min().date(), train["date_time"].max().date(),
-                len(test), test["date_time"].min().date(), test["date_time"].max().date())
+    logger.info("%s, %s", _describe("Development", train), _describe("test", test))
     return train, test
+
+
+def three_way_split(df: pd.DataFrame):
+    """Training / validation / test split (D19).
+
+    training   before VALID_START       fit candidate models
+    validation VALID_START..TEST_START  choose ONE model with a rule fixed in advance
+    test       from TEST_START          score the chosen model once
+    """
+    dt = df["date_time"]
+    valid_start, test_start = pd.Timestamp(config.VALID_START), pd.Timestamp(config.TEST_START)
+    train = df[dt < valid_start]
+    valid = df[(dt >= valid_start) & (dt < test_start)]
+    test = df[dt >= test_start]
+    if train["date_time"].max() >= valid["date_time"].min() or valid["date_time"].max() >= test["date_time"].min():
+        raise ValueError("Chronological split failed: periods overlap")
+    logger.info("%s, %s, %s", _describe("Training", train), _describe("validation", valid), _describe("test", test))
+    return train, valid, test
 
 
 def setup_mlflow(experiment: str) -> None:
