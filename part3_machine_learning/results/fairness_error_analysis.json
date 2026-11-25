@@ -1,0 +1,292 @@
+{
+  "weather_main": [
+    {
+      "weather_main": "Clear",
+      "hours": 2328,
+      "avg_volume": 2989.634,
+      "MAE": 189.004,
+      "bias_mean_error": 2.065,
+      "MAE_pct_of_volume": 0.063,
+      "MAE_vs_overall": 0.873,
+      "reliable": true
+    },
+    {
+      "weather_main": "Clouds",
+      "hours": 1996,
+      "avg_volume": 3924.413,
+      "MAE": 210.944,
+      "bias_mean_error": -19.751,
+      "MAE_pct_of_volume": 0.054,
+      "MAE_vs_overall": 0.974,
+      "reliable": true
+    },
+    {
+      "weather_main": "Drizzle",
+      "hours": 46,
+      "avg_volume": 3232.174,
+      "MAE": 125.048,
+      "bias_mean_error": -14.176,
+      "MAE_pct_of_volume": 0.039,
+      "MAE_vs_overall": 0.577,
+      "reliable": true
+    },
+    {
+      "weather_main": "Fog",
+      "hours": 99,
+      "avg_volume": 2522.162,
+      "MAE": 107.612,
+      "bias_mean_error": -40.453,
+      "MAE_pct_of_volume": 0.043,
+      "MAE_vs_overall": 0.497,
+      "reliable": true
+    },
+    {
+      "weather_main": "Haze",
+      "hours": 149,
+      "avg_volume": 3459.309,
+      "MAE": 186.225,
+      "bias_mean_error": -41.617,
+      "MAE_pct_of_volume": 0.054,
+      "MAE_vs_overall": 0.86,
+      "reliable": true
+    },
+    {
+      "weather_main": "Mist",
+      "hours": 354,
+      "avg_volume": 2801.079,
+      "MAE": 137.156,
+      "bias_mean_error": -4.194,
+      "MAE_pct_of_volume": 0.049,
+      "MAE_vs_overall": 0.633,
+      "reliable": true
+    },
+    {
+      "weather_main": "Rain",
+      "hours": 775,
+      "avg_volume": 3468.474,
+      "MAE": 162.713,
+      "bias_mean_error": -2.189,
+      "MAE_pct_of_volume": 0.047,
+      "MAE_vs_overall": 0.751,
+      "reliable": true
+    },
+    {
+      "weather_main": "Smoke",
+      "hours": 2,
+      "avg_volume": 4443.0,
+      "MAE": 117.475,
+      "bias_mean_error": 117.475,
+      "MAE_pct_of_volume": 0.026,
+      "MAE_vs_overall": 0.542,
+      "reliable": false
+    },
+    {
+      "weather_main": "Snow",
+      "hours": 516,
+      "avg_volume": 2809.219,
+      "MAE": 540.432,
+      "bias_mean_error": 296.22,
+      "MAE_pct_of_volume": 0.192,
+      "MAE_vs_overall": 2.495,
+      "reliable": true
+    },
+    {
+      "weather_main": "Thunderstorm",
+      "hours": 268,
+      "avg_volume": 3246.825,
+      "MAE": 209.278,
+      "bias_mean_error": 55.096,
+      "MAE_pct_of_volume": 0.064,
+      "MAE_vs_overall": 0.966,
+      "reliable": true
+    }
+  ],
+  "time_of_day": [
+    {
+      "time_of_day": "Evening",
+      "hours": 1365,
+      "avg_volume": 2552.763,
+      "MAE": 257.41,
+      "bias_mean_error": 6.627,
+      "MAE_pct_of_volume": 0.101,
+      "MAE_vs_overall": 1.188,
+      "reliable": true
+    },
+    {
+      "time_of_day": "Evening peak",
+      "hours": 1092,
+      "avg_volume": 5174.087,
+      "MAE": 307.289,
+      "bias_mean_error": 18.47,
+      "MAE_pct_of_volume": 0.059,
+      "MAE_vs_overall": 1.419,
+      "reliable": true
+    },
+    {
+      "time_of_day": "Midday",
+      "hours": 1365,
+      "avg_volume": 4622.812,
+      "MAE": 229.082,
+      "bias_mean_error": 49.262,
+      "MAE_pct_of_volume": 0.05,
+      "MAE_vs_overall": 1.058,
+      "reliable": true
+    },
+    {
+      "time_of_day": "Morning peak",
+      "hours": 1087,
+      "avg_volume": 4510.723,
+      "MAE": 254.396,
+      "bias_mean_error": 25.294,
+      "MAE_pct_of_volume": 0.056,
+      "MAE_vs_overall": 1.175,
+      "reliable": true
+    },
+    {
+      "time_of_day": "Night",
+      "hours": 1624,
+      "avg_volume": 841.827,
+      "MAE": 85.523,
+      "bias_mean_error": -2.929,
+      "MAE_pct_of_volume": 0.102,
+      "MAE_vs_overall": 0.395,
+      "reliable": true
+    }
+  ],
+  "day_type": [
+    {
+      "day_type": "Weekday",
+      "hours": 4671,
+      "avg_volume": 3586.847,
+      "MAE": 195.468,
+      "bias_mean_error": 23.165,
+      "MAE_pct_of_volume": 0.054,
+      "MAE_vs_overall": 0.902,
+      "reliable": true
+    },
+    {
+      "day_type": "Weekend",
+      "hours": 1862,
+      "avg_volume": 2664.277,
+      "MAE": 269.608,
+      "bias_mean_error": 5.902,
+      "MAE_pct_of_volume": 0.101,
+      "MAE_vs_overall": 1.245,
+      "reliable": true
+    }
+  ],
+  "holiday_flag": [
+    {
+      "holiday_flag": "Holiday",
+      "hours": 167,
+      "avg_volume": 2453.413,
+      "MAE": 376.398,
+      "bias_mean_error": 126.497,
+      "MAE_pct_of_volume": 0.153,
+      "MAE_vs_overall": 1.738,
+      "reliable": true
+    },
+    {
+      "holiday_flag": "Not holiday",
+      "hours": 6366,
+      "avg_volume": 3346.737,
+      "MAE": 212.407,
+      "bias_mean_error": 15.405,
+      "MAE_pct_of_volume": 0.063,
+      "MAE_vs_overall": 0.981,
+      "reliable": true
+    }
+  ],
+  "month_name": [
+    {
+      "month_name": "01 Jan",
+      "hours": 742,
+      "avg_volume": 3111.752,
+      "MAE": 300.912,
+      "bias_mean_error": 23.229,
+      "MAE_pct_of_volume": 0.097,
+      "MAE_vs_overall": 1.389,
+      "reliable": true
+    },
+    {
+      "month_name": "02 Feb",
+      "hours": 672,
+      "avg_volume": 3261.231,
+      "MAE": 252.463,
+      "bias_mean_error": -26.202,
+      "MAE_pct_of_volume": 0.077,
+      "MAE_vs_overall": 1.166,
+      "reliable": true
+    },
+    {
+      "month_name": "03 Mar",
+      "hours": 733,
+      "avg_volume": 3446.922,
+      "MAE": 217.693,
+      "bias_mean_error": 10.006,
+      "MAE_pct_of_volume": 0.063,
+      "MAE_vs_overall": 1.005,
+      "reliable": true
+    },
+    {
+      "month_name": "04 Apr",
+      "hours": 720,
+      "avg_volume": 3297.235,
+      "MAE": 301.57,
+      "bias_mean_error": 103.719,
+      "MAE_pct_of_volume": 0.091,
+      "MAE_vs_overall": 1.392,
+      "reliable": true
+    },
+    {
+      "month_name": "05 May",
+      "hours": 743,
+      "avg_volume": 3394.529,
+      "MAE": 181.289,
+      "bias_mean_error": 41.576,
+      "MAE_pct_of_volume": 0.053,
+      "MAE_vs_overall": 0.837,
+      "reliable": true
+    },
+    {
+      "month_name": "06 Jun",
+      "hours": 719,
+      "avg_volume": 3422.522,
+      "MAE": 163.976,
+      "bias_mean_error": 22.998,
+      "MAE_pct_of_volume": 0.048,
+      "MAE_vs_overall": 0.757,
+      "reliable": true
+    },
+    {
+      "month_name": "07 Jul",
+      "hours": 744,
+      "avg_volume": 3252.46,
+      "MAE": 191.443,
+      "bias_mean_error": -7.811,
+      "MAE_pct_of_volume": 0.059,
+      "MAE_vs_overall": 0.884,
+      "reliable": true
+    },
+    {
+      "month_name": "08 Aug",
+      "hours": 740,
+      "avg_volume": 3436.42,
+      "MAE": 167.571,
+      "bias_mean_error": -6.325,
+      "MAE_pct_of_volume": 0.049,
+      "MAE_vs_overall": 0.774,
+      "reliable": true
+    },
+    {
+      "month_name": "09 Sep",
+      "hours": 720,
+      "avg_volume": 3289.261,
+      "MAE": 175.521,
+      "bias_mean_error": 0.86,
+      "MAE_pct_of_volume": 0.053,
+      "MAE_vs_overall": 0.81,
+      "reliable": true
+    }
+  ]
+}

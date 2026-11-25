@@ -64,3 +64,15 @@
 2026-11-25 02:05:41 | INFO     | __main__ | Recommendation for 2018-12-25 (Clear, weekday): best 08:00-10:00, 33% below busiest
 2026-11-25 02:06:59 | INFO     | __main__ | recommender invoked with {'date': '2018-11-14', 'earliest': 6, 'latest': 10, 'window': 1, 'weather': 'Snow', 'temp': -5.0}
 2026-11-25 02:07:01 | INFO     | __main__ | Recommendation for 2018-11-14 (Snow, weekday): best 10:00-11:00, 24% below busiest
+2026-11-25 11:07:34 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-25 11:07:34 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-25 11:07:35 | INFO     | part3_machine_learning.ml_common | Train: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-25 11:07:35 | INFO     | __main__ | Overall 2018 regression MAE 216.6 over 6533 hours
+2026-11-25 11:07:36 | INFO     | __main__ | Largest error by weather_main: Snow (MAE 540, 2.50x overall, 516 hours)
+2026-11-25 11:07:36 | WARNING  | __main__ | Errors are uneven across weather_main: Snow has 2.5x the overall MAE
+2026-11-25 11:07:36 | INFO     | __main__ | Largest error by time_of_day: Evening peak (MAE 307, 1.42x overall, 1092 hours)
+2026-11-25 11:07:36 | INFO     | __main__ | Largest error by day_type: Weekend (MAE 270, 1.24x overall, 1862 hours)
+2026-11-25 11:07:36 | INFO     | __main__ | Largest error by holiday_flag: Holiday (MAE 376, 1.74x overall, 167 hours)
+2026-11-25 11:07:36 | WARNING  | __main__ | Errors are uneven across holiday_flag: Holiday has 1.7x the overall MAE
+2026-11-25 11:07:36 | INFO     | __main__ | Largest error by month_name: 04 Apr (MAE 302, 1.39x overall, 720 hours)
+2026-11-25 11:07:36 | INFO     | __main__ | Saved error distribution analysis
