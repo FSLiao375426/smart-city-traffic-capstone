@@ -1,0 +1,123 @@
+[
+  {
+    "request": "GET /health",
+    "body": null,
+    "status": 200,
+    "response": {
+      "status": "ok",
+      "model": "traffic_volume_hist_gradient_boosting (see MLflow registry)",
+      "n_features": 28,
+      "trained_on": "2012-10 to 2017-12",
+      "test_MAE_2018": 217.9
+    }
+  },
+  {
+    "request": "POST /predict",
+    "body": {
+      "date_time": "2018-10-02 08:00",
+      "weather_main": "Clear",
+      "temp_c": 12
+    },
+    "status": 200,
+    "response": {
+      "date_time": "2018-10-02 08:00",
+      "weather_main": "Clear",
+      "temp_c": 12.0,
+      "predicted_volume": 5912,
+      "traffic_category": "High",
+      "congested": true
+    }
+  },
+  {
+    "request": "POST /predict",
+    "body": {
+      "date_time": "2018-10-02 03:00",
+      "weather_main": "Clear"
+    },
+    "status": 200,
+    "response": {
+      "date_time": "2018-10-02 03:00",
+      "weather_main": "Clear",
+      "temp_c": 9.7,
+      "predicted_volume": 341,
+      "traffic_category": "Low",
+      "congested": false
+    }
+  },
+  {
+    "request": "POST /predict",
+    "body": {
+      "date_time": "2018-12-25 08:00",
+      "weather_main": "Snow",
+      "temp_c": -8
+    },
+    "status": 200,
+    "response": {
+      "date_time": "2018-12-25 08:00",
+      "weather_main": "Snow",
+      "temp_c": -8.0,
+      "predicted_volume": 1064,
+      "traffic_category": "Low",
+      "congested": false
+    }
+  },
+  {
+    "request": "POST /recommend",
+    "body": {
+      "date": "2018-10-02",
+      "earliest": 6,
+      "latest": 10,
+      "window": 1
+    },
+    "status": 200,
+    "response": {
+      "date": "2018-10-02",
+      "day_type": "weekday",
+      "holiday": false,
+      "weather": "Clear",
+      "temperature_c": 9.7,
+      "best_window": "10:00-11:00",
+      "best_expected_volume": 4513,
+      "busiest_window": "07:00-08:00",
+      "busiest_expected_volume": 6382,
+      "reduction_vs_busiest": 0.293,
+      "best_vs_typical_same_hours": 0.026,
+      "recommendation": "For your Tuesday 02 October 2018 journey between 06:00 and 11:00, in Clear conditions around 10 \u00b0C, consider travelling 10:00-11:00. Expected traffic is about 4,513 vehicles per hour, 29% lower than the busiest time in your range (07:00-08:00, about 6,382)."
+    }
+  },
+  {
+    "request": "POST /predict",
+    "body": {
+      "date_time": "02/10/2018 8am",
+      "weather_main": "Clear"
+    },
+    "status": 422,
+    "response": {
+      "detail": "date_time must look like 2018-10-02 08:00"
+    }
+  },
+  {
+    "request": "POST /predict",
+    "body": {
+      "date_time": "2018-10-02 08:00",
+      "weather_main": "Hail"
+    },
+    "status": 422,
+    "response": {
+      "detail": [
+        {
+          "type": "value_error",
+          "loc": [
+            "body",
+            "weather_main"
+          ],
+          "msg": "Value error, weather_main must be one of ['Clear', 'Clouds', 'Drizzle', 'Fog', 'Haze', 'Mist', 'Rain', 'Smoke', 'Snow', 'Squall', 'Thunderstorm']",
+          "input": "Hail",
+          "ctx": {
+            "error": {}
+          }
+        }
+      ]
+    }
+  }
+]
