@@ -93,6 +93,18 @@ uvicorn part3_machine_learning.api:app --port 8000      # API, then open http://
 
 The Power BI dashboard is `part1_data_analytics/powerbi/traffic_dashboard.pbix`, with a PDF export next to it.
 
+### Tests
+
+```bash
+python -m unittest discover -s tests -t . -v
+```
+
+26 unit tests on small hand-made tables (no data files needed, under a second). They cover the
+hourly collapse (traffic is never summed, every weather label is kept), imputation by month,
+closure flags, holiday extension, cyclical encoding, training-only quartile thresholds,
+the proxy risk label, the three-way chronological split, the model selection rule, and
+input checks in the CLI and the recommender.
+
 | Part | Report | Details |
 | --- | --- | --- |
 | 1 Data analytics | [`part1_data_analytics/INSIGHTS_REPORT.md`](part1_data_analytics/INSIGHTS_REPORT.md) | [`part1_data_analytics/README.md`](part1_data_analytics/README.md) |
