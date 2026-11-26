@@ -25,27 +25,29 @@ Before writing the pipeline, the raw data was profiled (shape, duplicates, uniqu
 | Standardise categories | 1,730 descriptions re-cased, 48,143 missing holiday labels set to "None" | One spelling per category |
 | Parse date/time | All rows parsed | Unparseable rows would be dropped and logged |
 | Remove exact duplicates | 17 rows | |
-| Collapse to one row per hour | 7,612 more rows removed, 40,575 hours | Keep the most severe weather (D1). Traffic was identical across repeats |
+| Collapse to one row per hour | 7,612 more rows removed, 40,575 hours | Keep the most severe weather in `weather_main` (D1) and every label in `weather_labels` (D21): 5,349 hours have two or more conditions. Traffic was identical across repeats |
 | Impossible values | 10 temperatures of 0 K, 1 rainfall of 9,831 mm | Temperature: median of the same month, applied month by month in a loop. Rainfall: median of the same weather description (D11), because its label was "very heavy rain" and the monthly median was 0 mm |
 | Traffic anomalies | 20 daytime hours under 100 vehicles on 4 days | Flagged, not imputed (D9). Traffic is the prediction target, and these look like planned road closures |
 | Holidays | 53 → 1,203 flagged hours | Extended from the midnight hour to the whole day (D3) |
 | Coverage | Gaps of 307 days (Aug 2014 to Jun 2015) and 10 days | Logged as warnings, nothing changed |
 
+Every run also writes `data/processed/quality_report.json`: the raw file's SHA-256 fingerprint (computed after normalising line endings, so it is the same on Windows and Linux) and what each step removed, merged, imputed or flagged. Anyone can check they started from the same file and got the same counts.
+
 Two choices deliberately depart from a literal reading of the brief. Rainfall is imputed by weather condition rather than by month, because a monthly median of 0 mm would contradict the record's own "very heavy rain" label. Zero traffic is flagged rather than imputed, because inventing target values would teach the Part 3 models fabricated answers. Both are documented in the code, the log and the README decision log.
 
 ## 3. Feature engineering (Task 2)
 
-The table grows from 12 to 50 columns.
+The table grows from 13 to 51 columns.
 
 | Group | Features |
 | --- | --- |
 | Time | `hour`, `day_of_week`, `is_weekend`, `month`, `year`, `time_of_day` band |
 | Cyclical | sine and cosine of hour (period 24), day of week (7) and month (12), so that 23:00 sits next to 00:00 |
-| Weather | `temp_c`, `weather_severity` (0 = Clear to 10 = Thunderstorm), `is_severe_weather`, `is_low_visibility`, `is_precipitation`, 11 one-hot `wx_*` columns |
-| Scaled | `temp_c_z` (z-score, mean 8.23 °C, sd 13.10), `clouds_all_mm` (min-max), `rain_1h_log` (log1p, because 95% of hours have no rain) |
-| Targets | `congested` (> 5,500), `traffic_category` (Low/Medium/High bands), `congestion_category` (quartiles at 1,248.5, 3,427 and 4,952), `high_risk` proxy label |
+| Weather | `temp_c`, `weather_severity` (0 = Clear to 10 = Thunderstorm), `is_severe_weather`, `is_low_visibility`, `is_precipitation`, 11 multi-hot `wx_*` columns (an hour with rain and mist has both `wx_Rain` and `wx_Mist` = 1, D21) |
+| Scaled | `temp_c_z` (z-score, mean 7.79 °C, sd 13.16), `clouds_all_mm` (min-max), `rain_1h_log` (log1p, because 95% of hours have no rain) |
+| Targets | `congested` (> 5,500), `traffic_category` (Low/Medium/High bands), `congestion_category` (quartiles at 1,204, 3,339 and 4,932), `high_risk` proxy label |
 
-**Target logic.** `congestion_category` uses quartiles of traffic volume, so each class holds about 10,144 hours. `high_risk` marks High or Severe congestion together with severe weather (Thunderstorm, Snow, Squall) or low visibility (Fog, Mist, Haze, Smoke). It is positive for 7.7% of hours, so the log warns that Part 3 must handle class imbalance. Scaling here uses the whole dataset for exploration only. Part 3 refits scalers on the training years to avoid leakage.
+**Target logic.** `congestion_category` uses quartiles of traffic volume. The thresholds, like the scaling parameters, are fitted on the training period only (before 2017, D20) and saved in `data/processed/feature_params.json`, so the 2017 validation year and the 2018 test year never influence how a label is defined. Each class holds between 9,896 and 10,394 hours. `high_risk` marks High or Severe congestion together with severe weather (Thunderstorm, Snow, Squall) or low visibility (Fog, Mist, Haze, Smoke) in **any** of the hour's weather labels. It is positive for 3,987 hours (9.8%), so the log warns that Part 3 must handle class imbalance. With only the most severe label (v1), 784 rain-and-fog hours were missed.
 
 ## 4. Visual findings (Task 3)
 
@@ -85,11 +87,12 @@ Typical profiles exclude flagged closure hours. When a weather filter has too li
 
 - **Logging:** every module uses `logging.getLogger(__name__)`. Only entry points configure handlers (console and file). Each cleaning step writes its own message with the number of affected rows and the reason. DEBUG messages (monthly medians, quartile thresholds, scaling parameters) appear only with `--debug`. No `print()` is used for progress. The sample `pipeline.log` and `app.log` are committed.
 - **Version control:** the work was committed incrementally, one commit per task, with descriptive messages. A follow-up commit improved rainfall imputation after reviewing the first pipeline run.
-- **Environment:** `requirements.txt` and a dedicated Python 3.11 conda environment.
+- **Environment:** `requirements.txt` (minimum versions), `requirements-lock.txt` (the exact versions used) and a dedicated Python 3.11 conda environment.
+- **Tests:** 27 unit tests (`tests/`) check the pipeline and feature rules on small hand-made tables, and GitHub Actions runs them after every push. `python run_all.py` reproduces every part in order.
 
 ## 7. Limitations
 
 - A single sensor on one corridor. Patterns do not generalise to the city network.
 - `rain_1h` is unreliable: 63% of hours labelled Rain record 0 mm, so rainfall features will be weak.
-- Weather labels were reduced to one per hour. The original label count is kept in `weather_label_count`, but co-occurring conditions are lost.
+- Weather categories overlap once every label is kept: per-condition counts add up to more than the number of hours, so charts use the most severe label (`weather_main`) and models use the multi-hot columns.
 - The 2014-2015 gap removes a full winter, so winter patterns rely on fewer years.
