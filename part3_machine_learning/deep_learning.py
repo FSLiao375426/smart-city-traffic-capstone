@@ -50,6 +50,8 @@ logger = logging.getLogger(__name__)
 
 # Keras warns that SHAP passes the input as a list; the SHAP values are unaffected
 warnings.filterwarnings("ignore", message=".*structure of `inputs` doesn't match.*")
+# shap.summary_plot seeds NumPy's global generator internally; the plot is unaffected
+warnings.filterwarnings("ignore", message=".*NumPy global RNG was seeded.*", category=FutureWarning)
 
 WINDOW = 24                    # hours of history per sequence
 SEQ_FEATURES = ["traffic_volume", "hour_sin", "hour_cos", "dow_sin", "dow_cos",
@@ -174,17 +176,17 @@ def explain_lstm(model, sc, X_background, X_explain) -> dict:
     logger.info("LSTM SHAP: the last hour carries %.0f%% of the attribution, the last 3 hours %.0f%%, "
                 "the same hour yesterday %.1f%%", 100 * share[-1], 100 * share[-3:].sum(), 100 * share[0])
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.8), gridspec_kw={"width_ratios": [1, 1.3]})
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 4.8), gridspec_kw={"width_ratios": [1, 1.3], "wspace": 0.35})
     top = by_feature.iloc[::-1]
     ax1.barh(top["feature"], top["mean_abs_shap"], color=BLUE, height=0.7)
     ax1.grid(axis="y", visible=False)
     ax1.set(xlabel="Mean |SHAP| summed over 24 hours (vehicles)")
-    ax1.set_title("Recent traffic drives the LSTM, then time of day", pad=22, loc="left")
+    ax1.set_title("Recent traffic drives the LSTM", pad=22, loc="left")
     subtitle(ax1, f"GradientExplainer, {len(X_explain)} test sequences from 2018")
     lags = np.arange(-WINDOW, 0)
     ax2.bar(lags, by_lag, color=[ORANGE if lag >= -3 else BLUE for lag in lags], width=0.8)
     ax2.set(xlabel="Input hour relative to the predicted hour", ylabel="Mean |SHAP| (vehicles)")
-    ax2.set_title(f"The last 3 hours carry {100 * share[-3:].sum():.0f}% of the attribution", pad=22, loc="left")
+    ax2.set_title(f"Last 3 hours: {100 * share[-3:].sum():.0f}% of the attribution", pad=22, loc="left")
     subtitle(ax2, "All features summed per input hour; orange = last 3 hours")
     save(fig, "lstm_shap.png")
     return {"by_feature": by_feature.round(1).to_dict("records"),
@@ -248,6 +250,8 @@ def save(fig, name: str) -> None:
 
 def main() -> int:
     setup_logging(mc.LOG_FILE, append=True)
+    # On native Windows TensorFlow warns that it has no GPU support; training runs on the CPU anyway
+    logging.getLogger("tensorflow").setLevel(logging.ERROR)
     mc.ensure_dirs()
     apply_style()
     try:

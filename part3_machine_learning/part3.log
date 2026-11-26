@@ -94,3 +94,27 @@
 2026-11-26 16:35:50 | INFO     | __main__ | recommender invoked with {'date': '2018-11-14', 'earliest': 6, 'latest': 10, 'window': 1, 'weather': 'Squall', 'temp': None}
 2026-11-26 16:35:54 | WARNING  | __main__ | Low support for Squall on a weekday between 06:00 and 10:00: 0 past hours (minimum 30)
 2026-11-26 16:35:54 | INFO     | __main__ | Recommendation for 2018-11-14 (Squall, weekday): best 10:00-11:00, 28% below busiest
+2026-11-26 16:52:51 | WARNING  | __main__ | Built 28851 sequences of 24 hours; skipped 11700 positions that cross a data gap or target a flagged closure hour
+2026-11-26 16:52:51 | INFO     | __main__ | LSTM data: 14368 training, 8236 validation and 6247 test sequences
+2026-11-26 16:52:52 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'traffic_volume_lstm' (store mlflow.db)
+2026-11-26 16:54:03 | INFO     | __main__ | Validation stage: best epoch 39 of 40 run (all epochs run), validation MAE (2017) 162.6
+2026-11-26 16:55:14 | INFO     | __main__ | Final LSTM refitted on 2012-2017 for 39 epochs in 71s
+2026-11-26 16:55:15 | INFO     | __main__ | LSTM test MAE 152.2, R2 0.987 | last-hour baseline MAE 588.4 | same-hour-yesterday MAE 567.3
+2026-11-26 16:55:16 | INFO     | __main__ | Saved figure part3_machine_learning\figures\lstm_test_week.png
+2026-11-26 16:55:24 | INFO     | __main__ | LSTM SHAP: traffic_volume   mean |contribution| 2015 vehicles
+2026-11-26 16:55:24 | INFO     | __main__ | LSTM SHAP: hour_sin         mean |contribution| 508 vehicles
+2026-11-26 16:55:24 | INFO     | __main__ | LSTM SHAP: hour_cos         mean |contribution| 476 vehicles
+2026-11-26 16:55:24 | INFO     | __main__ | LSTM SHAP: dow_sin          mean |contribution| 137 vehicles
+2026-11-26 16:55:24 | INFO     | __main__ | LSTM SHAP: the last hour carries 61% of the attribution, the last 3 hours 80%, the same hour yesterday 0.2%
+2026-11-26 16:55:25 | INFO     | __main__ | Saved figure part3_machine_learning\figures\lstm_shap.png
+2026-11-26 16:55:25 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 16:55:25 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 16:55:25 | INFO     | part3_machine_learning.ml_common | Development: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-26 16:55:30 | INFO     | __main__ | SHAP: hour_cos           mean |contribution| 1391 vehicles
+2026-11-26 16:55:30 | INFO     | __main__ | SHAP: hour               mean |contribution| 420 vehicles
+2026-11-26 16:55:30 | INFO     | __main__ | SHAP: day_of_week        mean |contribution| 317 vehicles
+2026-11-26 16:55:30 | INFO     | __main__ | SHAP: hour_sin           mean |contribution| 126 vehicles
+2026-11-26 16:55:30 | INFO     | __main__ | SHAP: dow_sin            mean |contribution| 76 vehicles
+2026-11-26 16:55:30 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_summary.png
+2026-11-26 16:55:31 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_importance.png
+2026-11-26 16:55:31 | INFO     | __main__ | Saved deep learning results
