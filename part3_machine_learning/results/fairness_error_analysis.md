@@ -39,6 +39,15 @@ Overall regression MAE: 213.2 vehicles per hour. Groups with fewer than 30 hours
 | Low visibility    |    1255 |      2904.89 | 276.472 |           107.741 |               0.095 |            1.297 | True       |
 | Normal visibility |    5278 |      3423.53 | 198.187 |            -3.763 |               0.058 |            0.929 | True       |
 
+## Regression error by snow_and_visibility
+
+| snow_and_visibility         |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
+|:----------------------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
+| No snow + low visibility    |     935 |      3020.32 | 160.148 |           -10.724 |               0.053 |            0.751 | True       |
+| No snow + normal visibility |    5077 |      3433.51 | 193.402 |            -4.777 |               0.056 |            0.907 | True       |
+| Snow + low visibility       |     320 |      2567.6  | 616.355 |           453.881 |               0.24  |            2.891 | True       |
+| Snow + normal visibility    |     201 |      3171.54 | 319.05  |            21.844 |               0.101 |            1.496 | True       |
+
 ## Regression error by time_of_day
 
 | time_of_day   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |

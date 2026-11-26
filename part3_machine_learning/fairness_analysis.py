@@ -94,9 +94,13 @@ def main() -> int:
     test["holiday_flag"] = np.where(test["is_holiday"] == 1, "Holiday", "Not holiday")
     test["month_name"] = test["date_time"].dt.strftime("%m %b")
     test["visibility"] = np.where(test["is_low_visibility"] == 1, "Low visibility", "Normal visibility")
+    # Snow and low visibility often occur together (D21); split them to see which drives the error
+    snow = np.where(test["wx_Snow"] == 1, "Snow", "No snow")
+    test["snow_and_visibility"] = pd.Series(snow, index=test.index) + " + " + test["visibility"].str.lower()
     logger.info("Overall 2018 regression MAE %.1f over %d hours", test["abs_error"].mean(), len(test))
 
-    groupings = ["weather_main", "visibility", "time_of_day", "day_type", "holiday_flag", "month_name"]
+    groupings = ["weather_main", "visibility", "snow_and_visibility", "time_of_day", "day_type",
+                 "holiday_flag", "month_name"]
     reg_tables = {by: regression_errors(test, by) for by in groupings}
     any_label = regression_errors_any_label(test)
     clf_tables = {by: classification_errors(test, by)

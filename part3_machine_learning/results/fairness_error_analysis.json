@@ -123,6 +123,48 @@
       "reliable": true
     }
   ],
+  "snow_and_visibility": [
+    {
+      "snow_and_visibility": "No snow + low visibility",
+      "hours": 935,
+      "avg_volume": 3020.323,
+      "MAE": 160.148,
+      "bias_mean_error": -10.724,
+      "MAE_pct_of_volume": 0.053,
+      "MAE_vs_overall": 0.751,
+      "reliable": true
+    },
+    {
+      "snow_and_visibility": "No snow + normal visibility",
+      "hours": 5077,
+      "avg_volume": 3433.51,
+      "MAE": 193.402,
+      "bias_mean_error": -4.777,
+      "MAE_pct_of_volume": 0.056,
+      "MAE_vs_overall": 0.907,
+      "reliable": true
+    },
+    {
+      "snow_and_visibility": "Snow + low visibility",
+      "hours": 320,
+      "avg_volume": 2567.603,
+      "MAE": 616.355,
+      "bias_mean_error": 453.881,
+      "MAE_pct_of_volume": 0.24,
+      "MAE_vs_overall": 2.891,
+      "reliable": true
+    },
+    {
+      "snow_and_visibility": "Snow + normal visibility",
+      "hours": 201,
+      "avg_volume": 3171.542,
+      "MAE": 319.05,
+      "bias_mean_error": 21.844,
+      "MAE_pct_of_volume": 0.101,
+      "MAE_vs_overall": 1.496,
+      "reliable": true
+    }
+  ],
   "time_of_day": [
     {
       "time_of_day": "Evening",

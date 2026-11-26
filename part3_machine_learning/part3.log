@@ -68,3 +68,18 @@
 2026-11-26 17:30:33 | INFO     | __main__ | Saved error distribution analysis
 2026-11-26 17:30:50 | INFO     | __main__ | recommender invoked with {'date': '2018-12-25', 'earliest': 8, 'latest': 18, 'window': 2, 'weather': 'Clear', 'temp': None}
 2026-11-26 17:30:55 | INFO     | __main__ | Recommendation for 2018-12-25 (Clear, weekday): best 08:00-10:00, 42% below busiest
+2026-11-26 17:58:56 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 17:58:56 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 17:58:56 | INFO     | part3_machine_learning.ml_common | Development: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-26 17:58:56 | INFO     | __main__ | Overall 2018 regression MAE 213.2 over 6533 hours
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by weather_main: Snow (MAE 498, 2.33x overall, 516 hours)
+2026-11-26 17:58:57 | WARNING  | __main__ | Errors are uneven across weather_main: Snow has 2.3x the overall MAE
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by visibility: Low visibility (MAE 276, 1.30x overall, 1255 hours)
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by snow_and_visibility: Snow + low visibility (MAE 616, 2.89x overall, 320 hours)
+2026-11-26 17:58:57 | WARNING  | __main__ | Errors are uneven across snow_and_visibility: Snow + low visibility has 2.9x the overall MAE
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by time_of_day: Evening peak (MAE 296, 1.39x overall, 1092 hours)
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by day_type: Weekend (MAE 261, 1.23x overall, 1862 hours)
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by holiday_flag: Holiday (MAE 369, 1.73x overall, 167 hours)
+2026-11-26 17:58:57 | WARNING  | __main__ | Errors are uneven across holiday_flag: Holiday has 1.7x the overall MAE
+2026-11-26 17:58:57 | INFO     | __main__ | Largest error by month_name: 04 Apr (MAE 298, 1.40x overall, 720 hours)
+2026-11-26 17:58:57 | INFO     | __main__ | Saved error distribution analysis
