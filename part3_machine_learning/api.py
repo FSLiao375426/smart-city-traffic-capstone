@@ -18,6 +18,7 @@ POST /predict     traffic volume for one hour
 POST /recommend   lowest-traffic travel window for a day
 """
 
+import json
 import logging
 from datetime import datetime
 from typing import Optional
@@ -70,11 +71,23 @@ def category(volume: float) -> str:
     return "Low" if volume < low else ("Medium" if volume <= high else "High")
 
 
+def deployed_test_mae():
+    """Test MAE of the deployed model, read from the supervised results (not hard-coded)."""
+    try:
+        rows = json.loads((mc.RESULTS_DIR / "supervised_results.json").read_text(encoding="utf-8"))["regression"]
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        logger.warning("supervised_results.json not readable; /health reports no test MAE")
+        return None
+    chosen = [r for r in rows if r.get("selected") == "yes"]
+    return round(chosen[0]["test_MAE"], 1) if chosen else None
+
+
 @app.get("/health")
 def health() -> dict:
     model, features, *_ = load_assets()
     return {"status": "ok", "model": MODEL_VERSION, "n_features": len(features),
-            "trained_on": "2012-10 to 2017-12", "test_MAE_2018": 217.9}
+            "trained_on": "2012-10 to 2017-12", "model_chosen_on": "2017 validation year",
+            "test_MAE_2018": deployed_test_mae()}
 
 
 @app.post("/predict")
@@ -85,7 +98,7 @@ def predict(req: PredictRequest) -> dict:
     except ValueError:
         logger.error("Invalid date_time '%s'", req.date_time)
         raise HTTPException(status_code=422, detail="date_time must look like 2018-10-02 08:00") from None
-    model, features, weather_medians, month_temp, _ = load_assets()
+    model, features, weather_medians, month_temp, *_ = load_assets()
     X = build_day_features(ts.normalize(), req.weather_main, req.temp_c, features, weather_medians, month_temp)
     volume = float(max(0.0, model.predict(X.iloc[[ts.hour]])[0]))
     result = {"date_time": ts.strftime("%Y-%m-%d %H:%M"), "weather_main": req.weather_main,

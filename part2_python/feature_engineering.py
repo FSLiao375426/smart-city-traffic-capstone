@@ -13,17 +13,20 @@ Feature groups
 Time      hour, day_of_week, is_weekend, month, year, time_of_day,
           cyclical sin/cos encodings of hour, day of week and month
 Weather   temp_c, weather_severity, is_severe_weather, is_low_visibility,
-          is_precipitation, one-hot weather_main (wx_*)
+          is_precipitation, multi-hot weather indicators (wx_*, D21)
 Scaled    temp_c_z (z-score), clouds_all_mm (min-max), rain_1h_log
 Targets   congested (> 5,500, Part 1), traffic_category (Low/Medium/High bands),
           congestion_category (quartiles, Part 3), high_risk (proxy label, Part 3)
 
-Scaling note: the scaled columns here use the whole dataset and serve
-exploration. Part 3 refits its scalers on the training years only, so no
-information from the 2018 test set leaks into training.
+Fitted values (D20): the z-score parameters, the min-max range and the
+quartile thresholds are learned from the training period only (before
+config.VALID_START) and saved to data/processed/feature_params.json.
+The 2017 validation year and the 2018 test year are then transformed with
+those saved values, so they never influence how a feature or label is defined.
 """
 
 import argparse
+import json
 import logging
 import sys
 
@@ -83,24 +86,40 @@ def add_time_features(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Weather features
 # ---------------------------------------------------------------------------
+def has_any_label(labels: pd.Series, wanted: list) -> pd.Series:
+    """1 when at least one of the hour's weather labels is in `wanted`."""
+    return labels.apply(lambda found: int(any(label in wanted for label in found)))
+
+
 def add_weather_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Weather features from ALL labels of the hour (D21), not only the most severe.
+
+    An hour labelled "Rain|Mist" is both precipitation and low visibility.
+    weather_main (the most severe label) still drives weather_severity, so
+    charts and group summaries keep one non-overlapping category per hour.
+    """
     df = df.copy()
     df["temp_c"] = df["temp"] - 273.15
     # Invert the severity rank so a larger number means harsher weather (Clear = 0)
     worst = max(config.WEATHER_SEVERITY.values())
     df["weather_severity"] = worst - df["weather_main"].map(config.WEATHER_SEVERITY)
-    df["is_severe_weather"] = df["weather_main"].isin(config.SEVERE_WEATHER).astype(int)
-    df["is_low_visibility"] = df["weather_main"].isin(config.LOW_VISIBILITY).astype(int)
-    df["is_precipitation"] = (
-        df["weather_main"].isin(["Rain", "Drizzle", "Snow", "Thunderstorm", "Squall"])
-        | (df["rain_1h"] > 0) | (df["snow_1h"] > 0)
-    ).astype(int)
 
-    dummies = pd.get_dummies(df["weather_main"], prefix="wx", dtype=int)
-    df = pd.concat([df, dummies], axis=1)
+    labels = df["weather_labels"].str.split("|")
+    df["is_severe_weather"] = has_any_label(labels, config.SEVERE_WEATHER)
+    df["is_low_visibility"] = has_any_label(labels, config.LOW_VISIBILITY)
+    precipitation = has_any_label(labels, ["Rain", "Drizzle", "Snow", "Thunderstorm", "Squall"])
+    df["is_precipitation"] = ((precipitation == 1) | (df["rain_1h"] > 0) | (df["snow_1h"] > 0)).astype(int)
 
+    # Multi-hot: one column per known condition, so the columns are the same in every run
+    for condition in config.WEATHER_SEVERITY:
+        df[f"wx_{condition}"] = has_any_label(labels, [condition])
+
+    primary_only_lowvis = int(df["weather_main"].isin(config.LOW_VISIBILITY).sum())
     logger.info("Added weather features: temp_c, weather_severity, is_severe_weather, "
-                "is_low_visibility, is_precipitation and %d one-hot weather columns", dummies.shape[1])
+                "is_low_visibility, is_precipitation and %d multi-hot weather columns",
+                len(config.WEATHER_SEVERITY))
+    logger.info("Low-visibility hours: %d using all labels vs %d using only the most severe label",
+                int(df["is_low_visibility"].sum()), primary_only_lowvis)
     logger.debug("Weather severity scores: %s",
                  {k: worst - v for k, v in sorted(config.WEATHER_SEVERITY.items(), key=lambda kv: kv[1])})
     return df
@@ -109,33 +128,44 @@ def add_weather_features(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Scaled numerical features
 # ---------------------------------------------------------------------------
-def add_scaled_features(df: pd.DataFrame) -> pd.DataFrame:
+def reference_period(df: pd.DataFrame) -> pd.Series:
+    """True for training-period rows, the only rows used to fit values (D20)."""
+    return df["date_time"] < pd.Timestamp(config.VALID_START)
+
+
+def add_scaled_features(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     df = df.copy()
-    mean, std = df["temp_c"].mean(), df["temp_c"].std()
+    ref = df.loc[reference_period(df)]
+
+    mean, std = ref["temp_c"].mean(), ref["temp_c"].std()
     df["temp_c_z"] = (df["temp_c"] - mean) / std
-    logger.debug("temp_c z-score parameters: mean = %.3f, std = %.3f", mean, std)
+    logger.debug("temp_c z-score parameters (training period): mean = %.3f, std = %.3f", mean, std)
 
-    lo, hi = df["clouds_all"].min(), df["clouds_all"].max()
+    lo, hi = ref["clouds_all"].min(), ref["clouds_all"].max()
     df["clouds_all_mm"] = (df["clouds_all"] - lo) / (hi - lo)
-    logger.debug("clouds_all min-max parameters: min = %s, max = %s", lo, hi)
+    logger.debug("clouds_all min-max parameters (training period): min = %s, max = %s", lo, hi)
 
-    # Rainfall is mostly 0 with a long right tail, so log1p compresses it
+    # Rainfall is mostly 0 with a long right tail, so log1p compresses it (nothing to fit)
     df["rain_1h_log"] = np.log1p(df["rain_1h"])
     logger.debug("rain_1h before log1p: share of zeros = %.3f, max = %.2f",
                  (df["rain_1h"] == 0).mean(), df["rain_1h"].max())
 
-    logger.info("Added scaled features: temp_c_z (z-score), clouds_all_mm (min-max), rain_1h_log (log1p)")
+    params["temp_c_z"] = {"mean": float(mean), "std": float(std)}
+    params["clouds_all_mm"] = {"min": float(lo), "max": float(hi)}
+    logger.info("Added scaled features: temp_c_z (z-score), clouds_all_mm (min-max), rain_1h_log (log1p); "
+                "parameters fitted on %d training-period hours", len(ref))
     return df
 
 
 # ---------------------------------------------------------------------------
 # Targets
 # ---------------------------------------------------------------------------
-def add_targets(df: pd.DataFrame) -> pd.DataFrame:
+def add_targets(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     """Create the three congestion definitions (D5) and the proxy risk label.
 
-    congestion_category uses data-driven quartiles of traffic_volume, so each
-    class holds about a quarter of the hours:
+    congestion_category uses data-driven quartiles of traffic_volume. The
+    thresholds come from the training period only (D20), so each class holds
+    about a quarter of the training hours:
         Low <= Q1 < Medium <= Q2 < High <= Q3 < Severe
     """
     df = df.copy()
@@ -146,8 +176,11 @@ def add_targets(df: pd.DataFrame) -> pd.DataFrame:
     low, high = config.CATEGORY_BANDS
     df["traffic_category"] = np.select([vol < low, vol <= high], ["Low", "Medium"], default="High")
 
-    q1, q2, q3 = vol.quantile([0.25, 0.5, 0.75]).to_numpy()
-    logger.debug("Congestion quartile thresholds: Q1 = %.1f, Q2 = %.1f, Q3 = %.1f", q1, q2, q3)
+    ref_vol = vol[reference_period(df)]
+    q1, q2, q3 = ref_vol.quantile([0.25, 0.5, 0.75]).to_numpy()
+    logger.debug("Congestion quartile thresholds (training period, %d hours): Q1 = %.1f, Q2 = %.1f, Q3 = %.1f",
+                 len(ref_vol), q1, q2, q3)
+    params["congestion_quartiles"] = {"q1": float(q1), "q2": float(q2), "q3": float(q3)}
 
     labels = []
     for v in vol.to_numpy():               # explicit loop mirrors the brief's bucket() function
@@ -178,14 +211,23 @@ def add_targets(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
-def build_features(df: pd.DataFrame) -> pd.DataFrame:
+def build_features(df: pd.DataFrame, params: dict = None) -> pd.DataFrame:
+    """Add every feature group. Fitted values are written into `params`."""
+    params = {} if params is None else params
+    params["fitted_on"] = f"date_time < {config.VALID_START} (training period)"
     logger.info("Dataset shape before feature engineering: %d rows, %d columns", *df.shape)
     df = add_time_features(df)
     df = add_weather_features(df)
-    df = add_scaled_features(df)
-    df = add_targets(df)
+    df = add_scaled_features(df, params)
+    df = add_targets(df, params)
     logger.info("Dataset shape after feature engineering: %d rows, %d columns", *df.shape)
     return df
+
+
+def save_params(params: dict) -> None:
+    """Save the fitted values so later steps (and graders) can see and reuse them."""
+    config.FEATURE_PARAMS_JSON.write_text(json.dumps(params, indent=2) + "\n", encoding="utf-8")
+    logger.info("Saved fitted feature parameters to %s", config.FEATURE_PARAMS_JSON)
 
 
 def main(argv=None) -> int:
@@ -202,8 +244,10 @@ def main(argv=None) -> int:
     logger.info("Loaded cleaned data for feature engineering from %s", config.CLEAN_CSV.name)
 
     try:
-        features = build_features(df)
+        params = {}
+        features = build_features(df, params)
         features.to_csv(config.FEATURES_CSV, index=False)
+        save_params(params)
     except (KeyError, ValueError, OSError):
         logger.error("Feature engineering did not complete", exc_info=True)
         return 1

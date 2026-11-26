@@ -1,88 +1,126 @@
 # Error distribution across conditions (2018 test set)
 
-Overall regression MAE: 216.6 vehicles per hour. Groups with fewer than 30 hours are marked unreliable. bias_mean_error > 0 means the model over-predicts traffic for that group.
+Overall regression MAE: 213.2 vehicles per hour. Groups with fewer than 30 hours are marked unreliable. bias_mean_error > 0 means the model over-predicts traffic for that group.
 
 ## Regression error by weather_main
 
 | weather_main   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
 |:---------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
-| Clear          |    2328 |      2989.63 | 189.004 |             2.065 |               0.063 |            0.873 | True       |
-| Clouds         |    1996 |      3924.41 | 210.944 |           -19.751 |               0.054 |            0.974 | True       |
-| Drizzle        |      46 |      3232.17 | 125.048 |           -14.176 |               0.039 |            0.577 | True       |
-| Fog            |      99 |      2522.16 | 107.612 |           -40.453 |               0.043 |            0.497 | True       |
-| Haze           |     149 |      3459.31 | 186.225 |           -41.617 |               0.054 |            0.86  | True       |
-| Mist           |     354 |      2801.08 | 137.156 |            -4.194 |               0.049 |            0.633 | True       |
-| Rain           |     775 |      3468.47 | 162.713 |            -2.189 |               0.047 |            0.751 | True       |
-| Smoke          |       2 |      4443    | 117.475 |           117.475 |               0.026 |            0.542 | False      |
-| Snow           |     516 |      2809.22 | 540.432 |           296.22  |               0.192 |            2.495 | True       |
-| Thunderstorm   |     268 |      3246.82 | 209.278 |            55.096 |               0.064 |            0.966 | True       |
+| Clear          |    2328 |      2989.63 | 189.424 |             4.763 |               0.063 |            0.888 | True       |
+| Clouds         |    1996 |      3924.41 | 212.202 |           -17.09  |               0.054 |            0.995 | True       |
+| Drizzle        |      46 |      3232.17 | 130.488 |           -24.619 |               0.04  |            0.612 | True       |
+| Fog            |      99 |      2522.16 | 108.184 |           -42.538 |               0.043 |            0.507 | True       |
+| Haze           |     149 |      3459.31 | 177.006 |           -29.772 |               0.051 |            0.83  | True       |
+| Mist           |     354 |      2801.08 | 144.303 |            -6.081 |               0.052 |            0.677 | True       |
+| Rain           |     775 |      3468.47 | 158.941 |           -10.544 |               0.046 |            0.745 | True       |
+| Smoke          |       2 |      4443    | 108.373 |           108.373 |               0.024 |            0.508 | False      |
+| Snow           |     516 |      2809.22 | 497.559 |           281.581 |               0.177 |            2.333 | True       |
+| Thunderstorm   |     268 |      3246.82 | 202.101 |            48.384 |               0.062 |            0.948 | True       |
+
+## Regression error by every weather label present (groups overlap)
+
+| weather_label_present   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_vs_overall | reliable   |
+|:------------------------|--------:|-------------:|--------:|------------------:|-----------------:|:-----------|
+| Clear                   |    2328 |      2989.63 | 189.424 |             4.763 |            0.888 | True       |
+| Clouds                  |    1996 |      3924.41 | 212.202 |           -17.09  |            0.995 | True       |
+| Drizzle                 |     278 |      3569.06 | 145.354 |             2.561 |            0.682 | True       |
+| Fog                     |     192 |      2224.91 | 509.904 |           393.864 |            2.391 | True       |
+| Haze                    |     272 |      3213.19 | 254.036 |            32.155 |            1.191 | True       |
+| Mist                    |    1099 |      2840.57 | 253.76  |            88.654 |            1.19  | True       |
+| Rain                    |     992 |      3391.65 | 182.483 |            17.243 |            0.856 | True       |
+| Smoke                   |       2 |      4443    | 108.373 |           108.373 |            0.508 | False      |
+| Snow                    |     521 |      2800.6  | 501.656 |           287.203 |            2.353 | True       |
+| Thunderstorm            |     268 |      3246.82 | 202.101 |            48.384 |            0.948 | True       |
+
+## Regression error by visibility
+
+| visibility        |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
+|:------------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
+| Low visibility    |    1255 |      2904.89 | 276.472 |           107.741 |               0.095 |            1.297 | True       |
+| Normal visibility |    5278 |      3423.53 | 198.187 |            -3.763 |               0.058 |            0.929 | True       |
+
+## Regression error by snow_and_visibility
+
+| snow_and_visibility         |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
+|:----------------------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
+| No snow + low visibility    |     935 |      3020.32 | 160.148 |           -10.724 |               0.053 |            0.751 | True       |
+| No snow + normal visibility |    5077 |      3433.51 | 193.402 |            -4.777 |               0.056 |            0.907 | True       |
+| Snow + low visibility       |     320 |      2567.6  | 616.355 |           453.881 |               0.24  |            2.891 | True       |
+| Snow + normal visibility    |     201 |      3171.54 | 319.05  |            21.844 |               0.101 |            1.496 | True       |
 
 ## Regression error by time_of_day
 
 | time_of_day   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
 |:--------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
-| Evening       |    1365 |     2552.76  | 257.41  |             6.627 |               0.101 |            1.188 | True       |
-| Evening peak  |    1092 |     5174.09  | 307.289 |            18.47  |               0.059 |            1.419 | True       |
-| Midday        |    1365 |     4622.81  | 229.082 |            49.262 |               0.05  |            1.058 | True       |
-| Morning peak  |    1087 |     4510.72  | 254.396 |            25.294 |               0.056 |            1.175 | True       |
-| Night         |    1624 |      841.827 |  85.523 |            -2.929 |               0.102 |            0.395 | True       |
+| Evening       |    1365 |     2552.76  | 255.953 |             8.135 |               0.1   |            1.2   | True       |
+| Evening peak  |    1092 |     5174.09  | 296.175 |            14.914 |               0.057 |            1.389 | True       |
+| Midday        |    1365 |     4622.81  | 223.864 |            45.434 |               0.048 |            1.05  | True       |
+| Morning peak  |    1087 |     4510.72  | 252.276 |            29.049 |               0.056 |            1.183 | True       |
+| Night         |    1624 |      841.827 |  86.457 |            -3.468 |               0.103 |            0.405 | True       |
 
 ## Regression error by day_type
 
 | day_type   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
 |:-----------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
-| Weekday    |    4671 |      3586.85 | 195.468 |            23.165 |               0.054 |            0.902 | True       |
-| Weekend    |    1862 |      2664.28 | 269.608 |             5.902 |               0.101 |            1.245 | True       |
+| Weekday    |    4671 |      3586.85 | 194.101 |            22.983 |               0.054 |            0.91  | True       |
+| Weekend    |    1862 |      2664.28 | 261.203 |             4.295 |               0.098 |            1.225 | True       |
 
 ## Regression error by holiday_flag
 
 | holiday_flag   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
 |:---------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
-| Holiday        |     167 |      2453.41 | 376.398 |           126.497 |               0.153 |            1.738 | True       |
-| Not holiday    |    6366 |      3346.74 | 212.407 |            15.405 |               0.063 |            0.981 | True       |
+| Holiday        |     167 |      2453.41 | 369.026 |           134.495 |               0.15  |            1.731 | True       |
+| Not holiday    |    6366 |      3346.74 | 209.139 |            14.592 |               0.062 |            0.981 | True       |
 
 ## Regression error by month_name
 
 | month_name   |   hours |   avg_volume |     MAE |   bias_mean_error |   MAE_pct_of_volume |   MAE_vs_overall | reliable   |
 |:-------------|--------:|-------------:|--------:|------------------:|--------------------:|-----------------:|:-----------|
-| 01 Jan       |     742 |      3111.75 | 300.912 |            23.229 |               0.097 |            1.389 | True       |
-| 02 Feb       |     672 |      3261.23 | 252.463 |           -26.202 |               0.077 |            1.166 | True       |
-| 03 Mar       |     733 |      3446.92 | 217.693 |            10.006 |               0.063 |            1.005 | True       |
-| 04 Apr       |     720 |      3297.24 | 301.57  |           103.719 |               0.091 |            1.392 | True       |
-| 05 May       |     743 |      3394.53 | 181.289 |            41.576 |               0.053 |            0.837 | True       |
-| 06 Jun       |     719 |      3422.52 | 163.976 |            22.998 |               0.048 |            0.757 | True       |
-| 07 Jul       |     744 |      3252.46 | 191.443 |            -7.811 |               0.059 |            0.884 | True       |
-| 08 Aug       |     740 |      3436.42 | 167.571 |            -6.325 |               0.049 |            0.774 | True       |
-| 09 Sep       |     720 |      3289.26 | 175.521 |             0.86  |               0.053 |            0.81  | True       |
+| 01 Jan       |     742 |      3111.75 | 289.2   |            23.911 |               0.093 |            1.356 | True       |
+| 02 Feb       |     672 |      3261.23 | 241.636 |           -31.118 |               0.074 |            1.133 | True       |
+| 03 Mar       |     733 |      3446.92 | 213.451 |            12.59  |               0.062 |            1.001 | True       |
+| 04 Apr       |     720 |      3297.24 | 298.424 |           104.659 |               0.091 |            1.4   | True       |
+| 05 May       |     743 |      3394.53 | 181.738 |            39.928 |               0.054 |            0.852 | True       |
+| 06 Jun       |     719 |      3422.52 | 161.936 |            14.363 |               0.047 |            0.759 | True       |
+| 07 Jul       |     744 |      3252.46 | 186.86  |           -10.81  |               0.057 |            0.876 | True       |
+| 08 Aug       |     740 |      3436.42 | 172.227 |            -0.347 |               0.05  |            0.808 | True       |
+| 09 Sep       |     720 |      3289.26 | 176.079 |             3.118 |               0.054 |            0.826 | True       |
 
 ## Proxy risk classifier by weather_main
 
-| weather_main   |   hours |   positives |   recall |   precision |   false_positive_rate |
-|:---------------|--------:|------------:|---------:|------------:|----------------------:|
-| Clear          |    2328 |           0 |  nan     |     nan     |                 0     |
-| Clouds         |    1996 |           0 |  nan     |     nan     |                 0     |
-| Drizzle        |      46 |           0 |  nan     |     nan     |                 0     |
-| Fog            |      99 |          28 |    1     |       1     |                 0     |
-| Haze           |     149 |          86 |    0.988 |       0.988 |                 0.016 |
-| Mist           |     354 |         137 |    1     |       0.993 |                 0.005 |
-| Rain           |     775 |           0 |  nan     |     nan     |                 0     |
-| Smoke          |       2 |           2 |    1     |       1     |                 0     |
-| Snow           |     516 |         209 |    0.981 |       0.743 |                 0.231 |
-| Thunderstorm   |     268 |         132 |    1     |       0.886 |                 0.125 |
+| weather_main   |   hours |   positives |   predicted_positives |   recall |   precision |   false_positive_rate | reliable   |
+|:---------------|--------:|------------:|----------------------:|---------:|------------:|----------------------:|:-----------|
+| Clear          |    2328 |           0 |                     0 |  n/a     |     n/a     |                 0     | True       |
+| Clouds         |    1996 |           0 |                     0 |  n/a     |     n/a     |                 0     | True       |
+| Drizzle        |      46 |           4 |                     4 |    1     |       1     |                 0     | True       |
+| Fog            |      99 |          28 |                    28 |    1     |       1     |                 0     | True       |
+| Haze           |     149 |          87 |                    87 |    0.977 |       0.977 |                 0.032 | True       |
+| Mist           |     354 |         140 |                   140 |    0.979 |       0.979 |                 0.014 | True       |
+| Rain           |     775 |         116 |                   121 |    0.983 |       0.942 |                 0.011 | True       |
+| Smoke          |       2 |           2 |                     0 |    0     |     n/a     |               n/a     | False      |
+| Snow           |     516 |         216 |                   278 |    0.995 |       0.773 |                 0.21  | True       |
+| Thunderstorm   |     268 |         134 |                   151 |    0.985 |       0.874 |                 0.142 | True       |
+
+## Proxy risk classifier by visibility
+
+| visibility        |   hours |   positives |   predicted_positives |   recall |   precision |   false_positive_rate | reliable   |
+|:------------------|--------:|------------:|----------------------:|---------:|------------:|----------------------:|:-----------|
+| Low visibility    |    1255 |         537 |                   596 |    0.983 |       0.886 |                 0.095 | True       |
+| Normal visibility |    5278 |         190 |                   213 |    0.984 |       0.878 |                 0.005 | True       |
 
 ## Proxy risk classifier by time_of_day
 
-| time_of_day   |   hours |   positives |   recall |   precision |   false_positive_rate |
-|:--------------|--------:|------------:|---------:|------------:|----------------------:|
-| Evening       |    1365 |          15 |    0.8   |       0.324 |                 0.019 |
-| Evening peak  |    1092 |         134 |    0.993 |       0.816 |                 0.031 |
-| Midday        |    1365 |         195 |    1     |       0.878 |                 0.023 |
-| Morning peak  |    1087 |         250 |    0.996 |       0.969 |                 0.01  |
-| Night         |    1624 |           0 |  nan     |     nan     |                 0     |
+| time_of_day   |   hours |   positives |   predicted_positives |   recall |   precision |   false_positive_rate | reliable   |
+|:--------------|--------:|------------:|----------------------:|---------:|------------:|----------------------:|:-----------|
+| Evening       |    1365 |          19 |                    46 |    0.842 |       0.348 |                 0.022 | True       |
+| Evening peak  |    1092 |         159 |                   183 |    0.994 |       0.863 |                 0.027 | True       |
+| Midday        |    1365 |         250 |                   273 |    0.984 |       0.901 |                 0.024 | True       |
+| Morning peak  |    1087 |         299 |                   307 |    0.987 |       0.961 |                 0.015 | True       |
+| Night         |    1624 |           0 |                     0 |  n/a     |     n/a     |                 0     | True       |
 
 ## Proxy risk classifier by day_type
 
-| day_type   |   hours |   positives |   recall |   precision |   false_positive_rate |
-|:-----------|--------:|------------:|---------:|------------:|----------------------:|
-| Weekday    |    4671 |         498 |    0.994 |       0.92  |                 0.01  |
-| Weekend    |    1862 |          96 |    0.979 |       0.667 |                 0.027 |
+| day_type   |   hours |   positives |   predicted_positives |   recall |   precision |   false_positive_rate | reliable   |
+|:-----------|--------:|------------:|----------------------:|---------:|------------:|----------------------:|:-----------|
+| Weekday    |    4671 |         604 |                   649 |    0.998 |       0.929 |                 0.011 | True       |
+| Weekend    |    1862 |         123 |                   160 |    0.911 |       0.7   |                 0.028 | True       |

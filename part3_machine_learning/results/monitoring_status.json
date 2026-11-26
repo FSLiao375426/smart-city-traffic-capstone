@@ -3,7 +3,6 @@
     "scenario": "Actual 2018",
     "status": "ALERT / Requires investigation",
     "reasons": [
-      "2018-01 MAE x1.26",
       "2018-04 MAE x1.27"
     ]
   },
@@ -11,12 +10,11 @@
     "scenario": "Simulated surge",
     "status": "ALERT / Requires investigation",
     "reasons": [
-      "2018-01 MAE x1.26",
       "2018-04 MAE x1.27",
-      "2018-06 MAE x4.22",
-      "2018-07 MAE x4.17",
-      "2018-08 MAE x4.36",
-      "2018-09 MAE x4.15"
+      "2018-06 MAE x4.29",
+      "2018-07 MAE x4.21",
+      "2018-08 MAE x4.37",
+      "2018-09 MAE x4.18"
     ]
   }
 ]

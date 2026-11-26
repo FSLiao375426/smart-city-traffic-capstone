@@ -2,7 +2,7 @@
 
 SQLite analysis, descriptive statistics, probability and the Power BI dashboard.
 
-**Read first:** [`INSIGHTS_REPORT.md`](INSIGHTS_REPORT.md), the 1-2 page summary for the mobility team.
+**Read first:** [`INSIGHTS_REPORT.pdf`](INSIGHTS_REPORT.pdf), the 2-page report for the mobility team. [`INSIGHTS_REPORT.md`](INSIGHTS_REPORT.md) is the full version with every table.
 
 ## Contents
 
@@ -17,7 +17,8 @@ SQLite analysis, descriptive statistics, probability and the Power BI dashboard.
 | `powerbi/traffic_dashboard.pdf` | 4 | PDF export for readers without Power BI |
 | `powerbi/screenshots/` | 4 | Data quality profiling and dashboard screenshots |
 | `part1.log` | | Log of the three scripts |
-| `INSIGHTS_REPORT.md` | | Part 1 deliverable report |
+| `INSIGHTS_REPORT.pdf` | | Part 1 deliverable report (2 pages) |
+| `INSIGHTS_REPORT.md` | | Full version of the report |
 
 ## How to run
 

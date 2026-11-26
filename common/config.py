@@ -33,8 +33,10 @@ EXPECTED_COLUMNS = [
 ]
 
 # --------------------------------------------------------------------------
-# D1: hourly grain. When one hour has several weather labels, keep the most
-# severe. Lower number = more severe (more impact on driving conditions).
+# D1: hourly grain. When one hour has several weather labels, weather_main
+# keeps the most severe. Lower number = more severe (more impact on driving).
+# D21: every label of the hour is also kept in weather_labels ("Mist|Rain"),
+# because rain together with mist is both precipitation and low visibility.
 # --------------------------------------------------------------------------
 WEATHER_SEVERITY = {
     "Thunderstorm": 1,
@@ -88,9 +90,21 @@ SEVERE_WEATHER = ["Thunderstorm", "Snow", "Squall"]
 LOW_VISIBILITY = ["Fog", "Mist", "Haze", "Smoke"]
 
 # --------------------------------------------------------------------------
-# D7: chronological train/test split (hourly traffic is autocorrelated)
+# D7 / D19: chronological split (hourly traffic is autocorrelated)
+#   training   : before VALID_START (2012-10 to 2016)
+#   validation : VALID_START to TEST_START (2017), used ONLY to choose models
+#   test       : from TEST_START (Jan-Sep 2018), scored once after the choice
 # --------------------------------------------------------------------------
+VALID_START = "2017-01-01"
 TEST_START = "2018-01-01"
+
+# D20: values learned from the data (quartile thresholds, scaling parameters)
+# are fitted on the training period only and saved here, so the validation
+# and test years never influence how features or labels are defined.
+FEATURE_PARAMS_JSON = DATA_DIR / "processed" / "feature_params.json"
+
+# Data quality report written by the pipeline: raw file fingerprint and what each step changed
+QUALITY_REPORT_JSON = DATA_DIR / "processed" / "quality_report.json"
 
 # --------------------------------------------------------------------------
 # Part 3 association rules (Apriori)

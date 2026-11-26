@@ -60,3 +60,6 @@ def setup_logging(log_file: Path, debug: bool = False, append: bool = False,
     # Third-party libraries log their own internals; keep only their warnings
     for noisy in ("matplotlib", "PIL", "urllib3", "httpx", "mlflow", "alembic", "tensorflow", "absl", "shap"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
+    # MLflow warns on every save that pickle-based formats need care. cloudpickle is a
+    # deliberate choice (the skops default rejects these models), so keep only its errors.
+    logging.getLogger("mlflow.sklearn").setLevel(logging.ERROR)

@@ -1,7 +1,9 @@
 {
   "lstm": {
-    "MAE": 163.5382843017578,
-    "R2": 0.9853036999702454
+    "MAE": 152.1739044189453,
+    "R2": 0.9868126511573792,
+    "valid_MAE_2017": 162.5641632080078,
+    "epochs_chosen": 39
   },
   "baseline_last_hour": {
     "MAE": 588.4197387695312,
@@ -11,48 +13,112 @@
     "MAE": 567.267822265625,
     "R2": 0.726202130317688
   },
-  "train_sequences": 22604,
+  "train_sequences": 14368,
+  "validation_sequences": 8236,
   "test_sequences": 6247,
+  "lstm_shap": {
+    "by_feature": [
+      {
+        "feature": "traffic_volume",
+        "mean_abs_shap": 2014.9
+      },
+      {
+        "feature": "hour_sin",
+        "mean_abs_shap": 507.7
+      },
+      {
+        "feature": "hour_cos",
+        "mean_abs_shap": 475.8
+      },
+      {
+        "feature": "dow_sin",
+        "mean_abs_shap": 137.4
+      },
+      {
+        "feature": "temp_c",
+        "mean_abs_shap": 96.8
+      },
+      {
+        "feature": "dow_cos",
+        "mean_abs_shap": 83.8
+      },
+      {
+        "feature": "weather_severity",
+        "mean_abs_shap": 30.7
+      },
+      {
+        "feature": "is_holiday",
+        "mean_abs_shap": 27.0
+      }
+    ],
+    "share_by_hours_before": {
+      "24": 0.002,
+      "23": 0.002,
+      "22": 0.003,
+      "21": 0.003,
+      "20": 0.004,
+      "19": 0.004,
+      "18": 0.005,
+      "17": 0.006,
+      "16": 0.007,
+      "15": 0.007,
+      "14": 0.008,
+      "13": 0.008,
+      "12": 0.009,
+      "11": 0.01,
+      "10": 0.01,
+      "9": 0.011,
+      "8": 0.012,
+      "7": 0.015,
+      "6": 0.02,
+      "5": 0.026,
+      "4": 0.032,
+      "3": 0.058,
+      "2": 0.127,
+      "1": 0.611
+    },
+    "explained_sequences": 300
+  },
   "shap_top_features": [
     {
       "feature": "hour_cos",
-      "mean_abs_shap": 1391.9
+      "mean_abs_shap": 1391.1
     },
     {
       "feature": "hour",
-      "mean_abs_shap": 417.6
+      "mean_abs_shap": 419.6
     },
     {
       "feature": "day_of_week",
-      "mean_abs_shap": 313.6
+      "mean_abs_shap": 317.1
     },
     {
       "feature": "hour_sin",
-      "mean_abs_shap": 127.7
+      "mean_abs_shap": 125.7
     },
     {
       "feature": "dow_sin",
-      "mean_abs_shap": 78.3
+      "mean_abs_shap": 75.9
     },
     {
       "feature": "temp_c",
-      "mean_abs_shap": 55.4
+      "mean_abs_shap": 61.8
     },
     {
       "feature": "is_holiday",
-      "mean_abs_shap": 53.7
+      "mean_abs_shap": 54.4
     },
     {
       "feature": "dow_cos",
-      "mean_abs_shap": 43.1
+      "mean_abs_shap": 43.3
     },
     {
       "feature": "month_sin",
-      "mean_abs_shap": 33.9
+      "mean_abs_shap": 37.9
     },
     {
       "feature": "month_cos",
-      "mean_abs_shap": 29.9
+      "mean_abs_shap": 28.8
     }
   ]
 }

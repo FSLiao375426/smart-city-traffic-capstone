@@ -1,0 +1,16 @@
+{
+  "fitted_on": "date_time < 2017-01-01 (training period)",
+  "temp_c_z": {
+    "mean": 7.790499624935866,
+    "std": 13.156057518591789
+  },
+  "clouds_all_mm": {
+    "min": 0.0,
+    "max": 100.0
+  },
+  "congestion_quartiles": {
+    "q1": 1204.0,
+    "q2": 3339.0,
+    "q3": 4932.0
+  }
+}

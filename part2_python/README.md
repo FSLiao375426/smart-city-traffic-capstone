@@ -2,17 +2,17 @@
 
 A reproducible, logged workflow that turns the raw CSV into clean data, ML-ready features, figures and a command-line app.
 
-**Read first:** [`REPORT.md`](REPORT.md), the 1-2 page methodology and findings report.
+**Read first:** [`REPORT.pdf`](REPORT.pdf), the 2-page methodology and findings report. [`REPORT.md`](REPORT.md) is the full version.
 
 ## Contents
 
 | File | Task | Output |
 | --- | --- | --- |
-| `pipeline.py` | 1 | `data/processed/traffic_clean.csv` (40,575 hours × 12 columns) |
-| `feature_engineering.py` | 2 | `data/processed/traffic_features.csv` (40,575 × 50) |
+| `pipeline.py` | 1 | `data/processed/traffic_clean.csv` (40,575 hours × 13 columns) and `quality_report.json` |
+| `feature_engineering.py` | 2 | `data/processed/traffic_features.csv` (40,575 × 51) and `feature_params.json` |
 | `visualizations.py` | 3 | Five PNG figures in `figures/` |
 | `traffic_app.py` | 4 | Command-line app |
-| `pipeline.log` | | Sample log of pipeline, features and figures (run in DEBUG mode) |
+| `pipeline.log` | | Sample log of pipeline, features and figures |
 | `app.log` | | Sample log of CLI commands, including invalid input |
 
 Shared code lives in `common/`: `config.py` (paths and decision constants), `data.py` (readers for the processed files) and `logging_setup.py`.
