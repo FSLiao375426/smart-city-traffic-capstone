@@ -147,10 +147,11 @@ input checks in the CLI and the recommender.
 
 | Part | Report | Details |
 | --- | --- | --- |
-| 1 Data analytics | [`part1_data_analytics/INSIGHTS_REPORT.md`](part1_data_analytics/INSIGHTS_REPORT.md) | [`part1_data_analytics/README.md`](part1_data_analytics/README.md) |
-| 2 Python pipeline | [`part2_python/REPORT.md`](part2_python/REPORT.md) | [`part2_python/README.md`](part2_python/README.md) |
+| 1 Data analytics | [`INSIGHTS_REPORT.pdf`](part1_data_analytics/INSIGHTS_REPORT.pdf) (2 pages), [full version](part1_data_analytics/INSIGHTS_REPORT.md) | [`part1_data_analytics/README.md`](part1_data_analytics/README.md) |
+| 2 Python pipeline | [`REPORT.pdf`](part2_python/REPORT.pdf) (2 pages), [full version](part2_python/REPORT.md) | [`part2_python/README.md`](part2_python/README.md) |
 | 3 Machine learning | [`final_capstone_report/FINAL_REPORT.md`](final_capstone_report/FINAL_REPORT.md) | [`part3_machine_learning/README.md`](part3_machine_learning/README.md) |
 | Responsible AI | [`final_capstone_report/BIAS_FAIRNESS_REPORT.md`](final_capstone_report/BIAS_FAIRNESS_REPORT.md) | |
+| v1 vs v2 | [`final_capstone_report/V1_V2_COMPARISON.md`](final_capstone_report/V1_V2_COMPARISON.md) | |
 
 ## Logging
 

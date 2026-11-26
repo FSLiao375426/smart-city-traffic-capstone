@@ -2,7 +2,7 @@
 
 A reproducible, logged workflow that turns the raw CSV into clean data, ML-ready features, figures and a command-line app.
 
-**Read first:** [`REPORT.md`](REPORT.md), the 1-2 page methodology and findings report.
+**Read first:** [`REPORT.pdf`](REPORT.pdf), the 2-page methodology and findings report. [`REPORT.md`](REPORT.md) is the full version.
 
 ## Contents
 
