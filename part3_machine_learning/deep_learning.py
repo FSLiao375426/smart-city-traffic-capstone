@@ -3,10 +3,16 @@
 LSTM  Reads the previous 24 hours (traffic plus calendar and weather features)
       and predicts the next hour's traffic volume. Sequences never cross a gap
       in the data: every sequence must cover 25 consecutive hours.
+      Same split as supervised.py (D19): the number of epochs is chosen by
+      early stopping on 2017, then the model is refitted on 2012-2017 for that
+      many epochs and scored once on 2018.
 
-SHAP  An LSTM is hard to explain directly, so SHAP is applied to the tree-based
-      regression model trained on the same problem (supervised.py). The brief
-      allows this, and TreeExplainer gives exact Shapley values for trees.
+SHAP  Two explanations:
+      1. GradientExplainer directly on the LSTM: which input features, and
+         which of the 24 past hours, move its predictions.
+      2. TreeExplainer on the gradient boosting regressor (supervised.py),
+         which forecasts future dates without live traffic. TreeExplainer
+         gives exact Shapley values for trees.
 
 Run from the repository root (after supervised.py):
 
@@ -18,6 +24,7 @@ import logging
 import os
 import sys
 import time
+import warnings
 
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")   # hide TensorFlow start-up chatter
 
@@ -41,10 +48,13 @@ from part3_machine_learning import ml_common as mc  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
+# Keras warns that SHAP passes the input as a list; the SHAP values are unaffected
+warnings.filterwarnings("ignore", message=".*structure of `inputs` doesn't match.*")
+
 WINDOW = 24                    # hours of history per sequence
 SEQ_FEATURES = ["traffic_volume", "hour_sin", "hour_cos", "dow_sin", "dow_cos",
                 "is_holiday", "temp_c", "weather_severity"]
-EPOCHS, BATCH = 15, 256
+EPOCHS, BATCH = 40, 256      # upper limit; early stopping on 2017 picks the actual number
 
 
 # ---------------------------------------------------------------------------
@@ -75,13 +85,17 @@ def build_sequences(df: pd.DataFrame):
     return X, y, targets
 
 
-def scale(X_train, X_test, y_train):
-    """Standardise each feature with TRAINING statistics only (no leakage)."""
-    mean = X_train.reshape(-1, X_train.shape[2]).mean(axis=0)
-    std = X_train.reshape(-1, X_train.shape[2]).std(axis=0) + 1e-6
-    y_mean, y_std = y_train.mean(), y_train.std()
-    logger.debug("Scaling means %s", dict(zip(SEQ_FEATURES, mean.round(2))))
-    return (X_train - mean) / std, (X_test - mean) / std, y_mean, y_std
+def fit_scaler(X_train, y_train) -> dict:
+    """Standardisation parameters from the training sequences only (no leakage)."""
+    flat = X_train.reshape(-1, X_train.shape[2])
+    params = {"mean": flat.mean(axis=0), "std": flat.std(axis=0) + 1e-6,
+              "y_mean": float(y_train.mean()), "y_std": float(y_train.std())}
+    logger.debug("Scaling means %s", dict(zip(SEQ_FEATURES, params["mean"].round(2))))
+    return params
+
+
+def apply_scaler(X, params):
+    return (X - params["mean"]) / params["std"]
 
 
 # ---------------------------------------------------------------------------
@@ -98,29 +112,84 @@ def build_lstm(n_features: int) -> tf.keras.Model:
     return model
 
 
-def train_lstm(X_tr, y_tr, X_te, y_te):
-    X_tr_s, X_te_s, y_mean, y_std = scale(X_tr, X_te, y_tr)
+def choose_epochs(X_tr, y_tr, X_va, y_va) -> tuple:
+    """Stage 1: train on 2012-2016, early-stop on 2017. Returns (best epochs, validation MAE)."""
+    sc = fit_scaler(X_tr, y_tr)
     tf.keras.utils.set_random_seed(config.RANDOM_SEED)
     model = build_lstm(X_tr.shape[2])
     stop = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=3, restore_best_weights=True)
-    start = time.perf_counter()
-    # validation_split takes the LAST 10% of training sequences, i.e. the most recent
-    # period, so validation stays chronological too
-    history = model.fit(X_tr_s, (y_tr - y_mean) / y_std, validation_split=0.1, epochs=EPOCHS,
-                        batch_size=BATCH, callbacks=[stop], verbose=0)
-    fit_s = time.perf_counter() - start
+    history = model.fit(apply_scaler(X_tr, sc), (y_tr - sc["y_mean"]) / sc["y_std"],
+                        validation_data=(apply_scaler(X_va, sc), (y_va - sc["y_mean"]) / sc["y_std"]),
+                        epochs=EPOCHS, batch_size=BATCH, callbacks=[stop], verbose=0)
     for epoch, (loss, val) in enumerate(zip(history.history["loss"], history.history["val_loss"]), 1):
-        logger.debug("Epoch %d: loss %.4f, val_loss %.4f", epoch, loss, val)
-    epochs_run = len(history.history["loss"])
-    logger.info("LSTM trained for %d epochs in %.0fs (%s)", epochs_run, fit_s,
-                "stopped early: validation loss stopped improving" if epochs_run < EPOCHS
-                else "all epochs run, validation loss still improving")
-    pred = model.predict(X_te_s, verbose=0).ravel() * y_std + y_mean
-    return model, pred, history, fit_s
+        logger.debug("Epoch %d: loss %.4f, val_loss (2017) %.4f", epoch, loss, val)
+    run = len(history.history["loss"])
+    best = int(np.argmin(history.history["val_loss"])) + 1
+    pred = model.predict(apply_scaler(X_va, sc), verbose=0).ravel() * sc["y_std"] + sc["y_mean"]
+    valid_mae = float(mean_absolute_error(y_va, pred))
+    logger.info("Validation stage: best epoch %d of %d run (%s), validation MAE (2017) %.1f",
+                best, run, "stopped early" if run < EPOCHS else "all epochs run", valid_mae)
+    return best, valid_mae
+
+
+def train_final(X_dev, y_dev, X_te, epochs: int):
+    """Stage 2: refit on 2012-2017 for the chosen number of epochs, predict 2018 once."""
+    sc = fit_scaler(X_dev, y_dev)
+    tf.keras.utils.set_random_seed(config.RANDOM_SEED)
+    model = build_lstm(X_dev.shape[2])
+    start = time.perf_counter()
+    model.fit(apply_scaler(X_dev, sc), (y_dev - sc["y_mean"]) / sc["y_std"],
+              epochs=epochs, batch_size=BATCH, verbose=0)
+    fit_s = time.perf_counter() - start
+    logger.info("Final LSTM refitted on 2012-2017 for %d epochs in %.0fs", epochs, fit_s)
+    pred = model.predict(apply_scaler(X_te, sc), verbose=0).ravel() * sc["y_std"] + sc["y_mean"]
+    return model, sc, pred, fit_s
 
 
 def evaluate(y_true, pred) -> dict:
     return {"MAE": float(mean_absolute_error(y_true, pred)), "R2": float(r2_score(y_true, pred))}
+
+
+# ---------------------------------------------------------------------------
+# SHAP directly on the LSTM
+# ---------------------------------------------------------------------------
+def explain_lstm(model, sc, X_background, X_explain) -> dict:
+    """GradientExplainer (expected gradients) on the scaled sequences.
+
+    Each SHAP value is the contribution of one input feature at one past hour
+    to one prediction, rescaled to vehicles per hour. Summing absolute values
+    over the 24 hours ranks the features; summing over the features shows how
+    far back in time the LSTM looks.
+    """
+    explainer = shap.GradientExplainer(model, apply_scaler(X_background, sc))
+    values = np.asarray(explainer.shap_values(apply_scaler(X_explain, sc)))
+    values = values.reshape(len(X_explain), WINDOW, len(SEQ_FEATURES)) * sc["y_std"]
+    by_feature = (pd.DataFrame({"feature": SEQ_FEATURES,
+                                "mean_abs_shap": np.abs(values).sum(axis=1).mean(axis=0)})
+                  .sort_values("mean_abs_shap", ascending=False).reset_index(drop=True))
+    by_lag = np.abs(values).sum(axis=2).mean(axis=0)          # position 0 = 24 hours before target
+    share = by_lag / by_lag.sum()
+    for _, r in by_feature.head(4).iterrows():
+        logger.info("LSTM SHAP: %-16s mean |contribution| %.0f vehicles", r["feature"], r["mean_abs_shap"])
+    logger.info("LSTM SHAP: the last hour carries %.0f%% of the attribution, the last 3 hours %.0f%%, "
+                "the same hour yesterday %.1f%%", 100 * share[-1], 100 * share[-3:].sum(), 100 * share[0])
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.8), gridspec_kw={"width_ratios": [1, 1.3]})
+    top = by_feature.iloc[::-1]
+    ax1.barh(top["feature"], top["mean_abs_shap"], color=BLUE, height=0.7)
+    ax1.grid(axis="y", visible=False)
+    ax1.set(xlabel="Mean |SHAP| summed over 24 hours (vehicles)")
+    ax1.set_title("Recent traffic drives the LSTM, then time of day", pad=22, loc="left")
+    subtitle(ax1, f"GradientExplainer, {len(X_explain)} test sequences from 2018")
+    lags = np.arange(-WINDOW, 0)
+    ax2.bar(lags, by_lag, color=[ORANGE if lag >= -3 else BLUE for lag in lags], width=0.8)
+    ax2.set(xlabel="Input hour relative to the predicted hour", ylabel="Mean |SHAP| (vehicles)")
+    ax2.set_title(f"The last 3 hours carry {100 * share[-3:].sum():.0f}% of the attribution", pad=22, loc="left")
+    subtitle(ax2, "All features summed per input hour; orange = last 3 hours")
+    save(fig, "lstm_shap.png")
+    return {"by_feature": by_feature.round(1).to_dict("records"),
+            "share_by_hours_before": {int(-lag): round(float(v), 3) for lag, v in zip(lags, share)},
+            "explained_sequences": int(len(X_explain))}
 
 
 # ---------------------------------------------------------------------------
@@ -184,29 +253,40 @@ def main() -> int:
     try:
         df = load_features()
         X, y, targets = build_sequences(df)
-        test_mask = targets >= pd.Timestamp(config.TEST_START)
-        X_tr, y_tr, X_te, y_te = X[~test_mask], y[~test_mask], X[test_mask], y[test_mask]
-        logger.info("LSTM data: %d training and %d test sequences", len(X_tr), len(X_te))
+        valid_start, test_start = pd.Timestamp(config.VALID_START), pd.Timestamp(config.TEST_START)
+        tr = np.asarray(targets < valid_start)
+        va = np.asarray((targets >= valid_start) & (targets < test_start))
+        te = np.asarray(targets >= test_start)
+        dev = tr | va
+        logger.info("LSTM data: %d training, %d validation and %d test sequences", tr.sum(), va.sum(), te.sum())
+        X_te, y_te = X[te], y[te]
 
         mc.setup_mlflow("traffic_volume_lstm")
         with mlflow.start_run(run_name="lstm_24h"):
-            model, pred, history, fit_s = train_lstm(X_tr, y_tr, X_te, y_te)
+            mlflow.set_tags({"stage": "test", "epochs_chosen_on": "2017"})
+            epochs, valid_mae = choose_epochs(X[tr], y[tr], X[va], y[va])
+            model, sc, pred, fit_s = train_final(X[dev], y[dev], X_te, epochs)
             m_lstm = evaluate(y_te, pred)
             pred_persist = X_te[:, -1, 0]          # last observed hour
             pred_daily = X_te[:, 0, 0]             # same hour yesterday (24 h before target)
             m_persist, m_daily = evaluate(y_te, pred_persist), evaluate(y_te, pred_daily)
             mlflow.log_params({"window_hours": WINDOW, "lstm_units": 32, "dense_units": 16,
-                               "max_epochs": EPOCHS, "epochs_run": len(history.history["loss"]),
+                               "max_epochs": EPOCHS, "epochs_chosen": epochs,
                                "batch_size": BATCH, "features": ",".join(SEQ_FEATURES)})
-            mlflow.log_metrics({"MAE": m_lstm["MAE"], "R2": m_lstm["R2"], "fit_seconds": fit_s,
-                                "baseline_last_hour_MAE": m_persist["MAE"],
+            mlflow.log_metrics({"valid_MAE": valid_mae, "MAE": m_lstm["MAE"], "R2": m_lstm["R2"],
+                                "fit_seconds": fit_s, "baseline_last_hour_MAE": m_persist["MAE"],
                                 "baseline_same_hour_yesterday_MAE": m_daily["MAE"]})
             model_path = mc.MODELS_DIR / "lstm_model.keras"
             model.save(model_path)
             mlflow.log_artifact(str(model_path))
         logger.info("LSTM test MAE %.1f, R2 %.3f | last-hour baseline MAE %.1f | same-hour-yesterday MAE %.1f",
                     m_lstm["MAE"], m_lstm["R2"], m_persist["MAE"], m_daily["MAE"])
-        plot_lstm(targets[test_mask], y_te, pred, pred_daily)
+        plot_lstm(targets[te], y_te, pred, pred_daily)
+
+        rng = np.random.default_rng(config.RANDOM_SEED)
+        background = X[dev][rng.choice(int(dev.sum()), 200, replace=False)]
+        explained = X_te[rng.choice(len(X_te), 300, replace=False)]
+        lstm_shap = explain_lstm(model, sc, background, explained)
 
         _, test = mc.time_split(mc.load_model_data())
         importance = explain_tree_model(test)
@@ -217,8 +297,10 @@ def main() -> int:
         logger.error("Deep learning step did not complete", exc_info=True)
         return 1
 
-    results = {"lstm": m_lstm, "baseline_last_hour": m_persist, "baseline_same_hour_yesterday": m_daily,
-               "train_sequences": int(len(X_tr)), "test_sequences": int(len(X_te)),
+    results = {"lstm": {**m_lstm, "valid_MAE_2017": valid_mae, "epochs_chosen": epochs},
+               "baseline_last_hour": m_persist, "baseline_same_hour_yesterday": m_daily,
+               "train_sequences": int(tr.sum()), "validation_sequences": int(va.sum()),
+               "test_sequences": int(te.sum()), "lstm_shap": lstm_shap,
                "shap_top_features": importance.head(10).round(1).to_dict("records")}
     (mc.RESULTS_DIR / "deep_learning_results.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
     logger.info("Saved deep learning results")

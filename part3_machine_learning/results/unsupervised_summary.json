@@ -35,53 +35,53 @@
   "top_rules": [
     {
       "rule": "day=Weekend AND temp=Below 0C AND time=Night => congestion=Low",
-      "lift": 3.793,
-      "confidence": 0.947
-    },
-    {
-      "rule": "day=Weekend AND temp=Above 20C AND time=Evening peak => congestion=High",
-      "lift": 3.667,
-      "confidence": 0.917
-    },
-    {
-      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Rain => congestion=Severe",
-      "lift": 3.647,
-      "confidence": 0.912
-    },
-    {
-      "rule": "day=Weekend AND time=Night AND weather=Clouds => congestion=Low",
-      "lift": 3.642,
-      "confidence": 0.909
-    },
-    {
-      "rule": "day=Weekend AND time=Night => congestion=Low",
-      "lift": 3.591,
-      "confidence": 0.896
-    },
-    {
-      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Clear => congestion=Severe",
-      "lift": 3.583,
-      "confidence": 0.896
+      "lift": 3.824,
+      "confidence": 0.938
     },
     {
       "rule": "day=Weekday AND temp=Above 20C AND time=Night => congestion=Low",
-      "lift": 3.574,
-      "confidence": 0.892
+      "lift": 3.628,
+      "confidence": 0.889
     },
     {
-      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak => congestion=Severe",
-      "lift": 3.566,
-      "confidence": 0.892
+      "rule": "day=Weekend AND time=Night AND weather=Clouds => congestion=Low",
+      "lift": 3.627,
+      "confidence": 0.889
+    },
+    {
+      "rule": "day=Weekend AND temp=Above 20C AND time=Evening peak => congestion=High",
+      "lift": 3.622,
+      "confidence": 0.928
+    },
+    {
+      "rule": "day=Weekend AND time=Night => congestion=Low",
+      "lift": 3.597,
+      "confidence": 0.882
+    },
+    {
+      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Rain => congestion=Severe",
+      "lift": 3.59,
+      "confidence": 0.914
+    },
+    {
+      "rule": "day=Weekday AND temp=0-20C AND time=Morning peak AND weather=Clear => congestion=Severe",
+      "lift": 3.565,
+      "confidence": 0.907
+    },
+    {
+      "rule": "temp=Below 0C AND time=Night AND weather=Snow => congestion=Low",
+      "lift": 3.559,
+      "confidence": 0.873
+    },
+    {
+      "rule": "time=Night AND weather=Snow => congestion=Low",
+      "lift": 3.551,
+      "confidence": 0.871
     },
     {
       "rule": "day=Weekend AND temp=0-20C AND time=Night => congestion=Low",
-      "lift": 3.546,
-      "confidence": 0.885
-    },
-    {
-      "rule": "day=Weekend AND time=Night AND weather=Clear => congestion=Low",
-      "lift": 3.525,
-      "confidence": 0.88
+      "lift": 3.542,
+      "confidence": 0.868
     }
   ]
 }

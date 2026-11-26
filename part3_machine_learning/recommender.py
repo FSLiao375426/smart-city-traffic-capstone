@@ -7,8 +7,11 @@ not which route. For a given date it:
    expected weather and temperature),
 2. predicts hourly traffic with the gradient boosting model from supervised.py,
 3. finds the lowest-traffic window inside the user's acceptable time range,
-4. compares it with the busiest window and the historical norm, and
-5. writes a plain-language recommendation.
+4. compares it with the busiest window and the historical norm,
+5. checks how many past hours match the request (same weather, day type and
+   hours). With fewer than MIN_SUPPORT hours the forecast is still given but
+   flagged as low confidence, because the model has seen too few examples, and
+6. writes a plain-language recommendation.
 
 Unlike the Part 2 CLI (historical averages only), the model adjusts for the
 specific date: month, holidays, and the weather the user expects.
@@ -38,6 +41,7 @@ from part3_machine_learning import ml_common as mc
 
 logger = logging.getLogger(__name__)
 WEATHER_TYPES = sorted(config.WEATHER_SEVERITY)
+MIN_SUPPORT = 30     # past hours with the same weather, day type and hour range
 
 
 class RecommendationError(ValueError):
@@ -53,7 +57,18 @@ def load_assets():
     weather_medians = hist.groupby("weather_main")[["rain_1h_log", "snow_1h", "clouds_all"]].median()
     month_temp = hist.groupby("month")["temp_c"].median()
     profile = hist.groupby(["is_weekend", "hour"])["traffic_volume"].mean()
-    return bundle["model"], bundle["features"], weather_medians, month_temp, profile
+    # Support counts: past hours (the model's development years) per weather label, day type and hour
+    dev = hist[hist["date_time"] < pd.Timestamp(config.TEST_START)]
+    support = {w: dev[dev[f"wx_{w}"] == 1].groupby(["is_weekend", "hour"]).size() for w in WEATHER_TYPES}
+    return bundle["model"], bundle["features"], weather_medians, month_temp, profile, support
+
+
+def history_support(support: dict, weather: str, weekend: int, earliest: int, latest: int) -> int:
+    """Past hours with this weather on the same day type within the requested hours."""
+    counts = support[weather]
+    if weekend not in counts.index.get_level_values(0):
+        return 0
+    return int(counts.loc[weekend].reindex(range(earliest, latest + 1), fill_value=0).sum())
 
 
 def is_federal_holiday(day: pd.Timestamp) -> bool:
@@ -102,7 +117,7 @@ def recommend(day: str, earliest: int = 6, latest: int = 20, window: int = 1,
         raise RecommendationError(f"Unknown weather '{weather}'. Choose from: {', '.join(WEATHER_TYPES)}")
     weather = match[0]
 
-    model, features, weather_medians, month_temp, profile = load_assets()
+    model, features, weather_medians, month_temp, profile, support = load_assets()
     X = build_day_features(ts, weather, temp_c, features, weather_medians, month_temp)
     hourly = pd.Series(model.predict(X), index=range(24)).clip(lower=0)
     windows = hourly.rolling(window).mean().shift(-(window - 1)).loc[earliest:latest - window + 1].dropna()
@@ -122,6 +137,14 @@ def recommend(day: str, earliest: int = 6, latest: int = 20, window: int = 1,
             f"({worst:02d}:00-{worst + window:02d}:00, about {windows.max():,.0f}).")
     if windows.min() > config.CONGESTION_THRESHOLD:
         text += " Every window in your range is expected to be congested, so consider widening it."
+    n_support = history_support(support, weather, int(ts.day_of_week >= 5), earliest, latest)
+    confidence = "normal" if n_support >= MIN_SUPPORT else "low"
+    if confidence == "low":
+        seen = f"only {n_support}" if n_support else "no"
+        text += (f" Caution: {seen} past {day_type} hours in this time range had {weather} "
+                 f"conditions, so this forecast is uncertain.")
+        logger.warning("Low support for %s on a %s between %02d:00 and %02d:00: %d past hours (minimum %d)",
+                       weather, day_type, earliest, latest, n_support, MIN_SUPPORT)
 
     result = {
         "date": ts.strftime("%Y-%m-%d"), "day_type": day_type, "holiday": holiday,
@@ -131,6 +154,7 @@ def recommend(day: str, earliest: int = 6, latest: int = 20, window: int = 1,
         "busiest_expected_volume": round(float(windows.max())),
         "reduction_vs_busiest": round(float(saving), 3),
         "best_vs_typical_same_hours": round(float(vs_typical), 3),
+        "history_support_hours": n_support, "confidence": confidence,
         "hourly_forecast": {f"{h:02d}:00": round(float(v)) for h, v in hourly.items()},
         "recommendation": text,
     }

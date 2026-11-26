@@ -48,6 +48,31 @@ ERROR_RATIO_ALERT = 1.25               # a month whose MAE is 25% above the base
 SURGE = 1.30
 
 
+def validation_baseline(df: pd.DataFrame, model, features: list) -> float:
+    """Validation MAE of the deployed model type, from supervised.py's frozen selection.
+
+    Read from results/model_selection.json so monitoring and model selection use
+    the same number. If the file is missing, it is recomputed the same way.
+    """
+    path = mc.RESULTS_DIR / "model_selection.json"
+    try:
+        selections = json.loads(path.read_text(encoding="utf-8"))["selections"]
+        reg = next(s for s in selections if s["task"] == "regression")
+        mae = float(reg["validation_scores"][reg["chosen"]]["MAE"])
+        logger.info("Baseline MAE %.1f: validation MAE (2017) of the chosen model, read from %s",
+                    mae, path.name)
+        return mae
+    except (FileNotFoundError, KeyError, StopIteration, json.JSONDecodeError):
+        logger.warning("%s not readable; recomputing the baseline (train to 2016, validate on 2017)", path.name)
+    pre_train = df[df["date_time"] < pd.Timestamp(config.VALID_START)]
+    validation = df[(df["date_time"] >= pd.Timestamp(config.VALID_START))
+                    & (df["date_time"] < pd.Timestamp(config.TEST_START))]
+    validator = clone(model).fit(pre_train[features], pre_train["traffic_volume"])
+    mae = mean_absolute_error(validation["traffic_volume"], validator.predict(validation[features]))
+    logger.info("Baseline MAE %.1f (model trained to 2016, validated on 2017)", mae)
+    return mae
+
+
 def psi(reference: pd.Series, current: pd.Series, bins: int = 10) -> float:
     """Population Stability Index with bins from reference quantiles."""
     edges = np.unique(np.quantile(reference, np.linspace(0, 1, bins + 1)))
@@ -154,14 +179,10 @@ def main() -> int:
     reference = df[(df["date_time"].dt.year == 2017) & (df["date_time"].dt.month <= 9)]
     current = df[df["date_time"] >= pd.Timestamp(config.TEST_START)]
 
-    # Baseline error = what we could have known BEFORE deployment: the same model
-    # type trained up to 2016 and validated on 2017. Using 2018's own error as the
-    # baseline would be circular.
-    pre_train = df[df["date_time"].dt.year <= 2016]
-    validation = df[df["date_time"].dt.year == 2017]
-    validator = clone(model).fit(pre_train[features], pre_train["traffic_volume"])
-    baseline_mae = mean_absolute_error(validation["traffic_volume"], validator.predict(validation[features]))
-    logger.info("Baseline MAE %.1f (model trained to 2016, validated on 2017)", baseline_mae)
+    # Baseline error = what we could have known BEFORE deployment: the chosen model
+    # type trained up to 2016 and validated on 2017 (D17, D19). Using 2018's own
+    # error as the baseline would be circular.
+    baseline_mae = validation_baseline(df, model, features)
     logger.info("Reference: %d hours (Jan-Sep 2017). Current: %d hours (Jan-Sep 2018)", len(reference), len(current))
 
     surge = current.copy()

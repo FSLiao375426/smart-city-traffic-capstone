@@ -26,3 +26,71 @@
 2026-11-26 05:00:40 | INFO     | __main__ | [test] classification Gradient boosting              accuracy 0.984  precision 0.884  recall 0.983  F1 0.931  ROC_AUC 0.998
 2026-11-26 05:00:40 | INFO     | __main__ | Saved chosen classification model (Gradient boosting, refitted on 2012-2017) to classification_model.joblib
 2026-11-26 05:00:41 | INFO     | __main__ | Saved supervised results and model_selection.json to part3_machine_learning\results
+2026-11-26 16:23:07 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 16:23:07 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 16:23:16 | INFO     | __main__ | Chose k = 5: highest silhouette (0.356) for k <= 6. Larger k only splits existing groups (silhouette 0.392 at k = 8)
+2026-11-26 16:23:17 | INFO     | __main__ | Cluster 4 (5425 hours): Weekend off-peak hours, light traffic, fair weather, avg volume 1200, congested 0%
+2026-11-26 16:23:17 | INFO     | __main__ | Cluster 0 (11732 hours): Weekday off-peak hours, light traffic, fair weather, avg volume 1473, congested 0%
+2026-11-26 16:23:17 | INFO     | __main__ | Cluster 2 (5820 hours): Weekend daytime, busy traffic, fair weather, avg volume 3910, congested 1%
+2026-11-26 16:23:17 | INFO     | __main__ | Cluster 3 (5553 hours): Weekday mixed hours, busy traffic, rain or snow, avg volume 4241, congested 24%
+2026-11-26 16:23:17 | INFO     | __main__ | Cluster 1 (12025 hours): Weekday daytime, congested traffic, fair weather, avg volume 5273, congested 40%
+2026-11-26 16:23:18 | INFO     | __main__ | Saved figure part3_machine_learning\figures\kmeans_k_selection.png
+2026-11-26 16:23:18 | INFO     | __main__ | Saved figure part3_machine_learning\figures\kmeans_clusters.png
+2026-11-26 16:23:19 | INFO     | __main__ | Association rules: 40555 transactions, 21 items
+2026-11-26 16:23:19 | INFO     | __main__ | Kept 153 rules that predict a congestion level (support >= 0.010, confidence >= 0.50)
+2026-11-26 16:23:19 | INFO     | __main__ | Rule: day=Weekend AND temp=Below 0C AND time=Night => congestion=Low (support 0.022, confidence 0.94, lift 3.82)
+2026-11-26 16:23:19 | INFO     | __main__ | Rule: day=Weekday AND temp=Above 20C AND time=Night => congestion=Low (support 0.015, confidence 0.89, lift 3.63)
+2026-11-26 16:23:19 | INFO     | __main__ | Rule: day=Weekend AND time=Night AND weather=Clouds => congestion=Low (support 0.016, confidence 0.89, lift 3.63)
+2026-11-26 16:23:19 | INFO     | __main__ | Rule: day=Weekend AND temp=Above 20C AND time=Evening peak => congestion=High (support 0.017, confidence 0.93, lift 3.62)
+2026-11-26 16:23:19 | INFO     | __main__ | Rule: day=Weekend AND time=Night => congestion=Low (support 0.063, confidence 0.88, lift 3.60)
+2026-11-26 16:23:19 | INFO     | __main__ | Saved unsupervised results to part3_machine_learning\results
+2026-11-26 16:25:57 | WARNING  | __main__ | Built 28851 sequences of 24 hours; skipped 11700 positions that cross a data gap or target a flagged closure hour
+2026-11-26 16:25:57 | INFO     | __main__ | LSTM data: 14368 training, 8236 validation and 6247 test sequences
+2026-11-26 16:26:01 | INFO     | part3_machine_learning.ml_common | MLflow experiment 'traffic_volume_lstm' (store mlflow.db)
+2026-11-26 16:26:03 | WARNING  | tensorflow | TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+2026-11-26 16:27:18 | INFO     | __main__ | Validation stage: best epoch 39 of 40 run (all epochs run), validation MAE (2017) 162.6
+2026-11-26 16:28:39 | INFO     | __main__ | Final LSTM refitted on 2012-2017 for 39 epochs in 81s
+2026-11-26 16:28:41 | INFO     | __main__ | LSTM test MAE 152.2, R2 0.987 | last-hour baseline MAE 588.4 | same-hour-yesterday MAE 567.3
+2026-11-26 16:28:42 | INFO     | __main__ | Saved figure part3_machine_learning\figures\lstm_test_week.png
+2026-11-26 16:29:05 | INFO     | __main__ | LSTM SHAP: traffic_volume   mean |contribution| 2015 vehicles
+2026-11-26 16:29:05 | INFO     | __main__ | LSTM SHAP: hour_sin         mean |contribution| 508 vehicles
+2026-11-26 16:29:05 | INFO     | __main__ | LSTM SHAP: hour_cos         mean |contribution| 476 vehicles
+2026-11-26 16:29:05 | INFO     | __main__ | LSTM SHAP: dow_sin          mean |contribution| 137 vehicles
+2026-11-26 16:29:05 | INFO     | __main__ | LSTM SHAP: the last hour carries 61% of the attribution, the last 3 hours 80%, the same hour yesterday 0.2%
+2026-11-26 16:29:06 | INFO     | __main__ | Saved figure part3_machine_learning\figures\lstm_shap.png
+2026-11-26 16:29:06 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 16:29:06 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 16:29:06 | INFO     | part3_machine_learning.ml_common | Development: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-26 16:29:19 | INFO     | __main__ | SHAP: hour_cos           mean |contribution| 1391 vehicles
+2026-11-26 16:29:19 | INFO     | __main__ | SHAP: hour               mean |contribution| 420 vehicles
+2026-11-26 16:29:19 | INFO     | __main__ | SHAP: day_of_week        mean |contribution| 317 vehicles
+2026-11-26 16:29:19 | INFO     | __main__ | SHAP: hour_sin           mean |contribution| 126 vehicles
+2026-11-26 16:29:19 | INFO     | __main__ | SHAP: dow_sin            mean |contribution| 76 vehicles
+2026-11-26 16:29:22 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_summary.png
+2026-11-26 16:29:22 | INFO     | __main__ | Saved figure part3_machine_learning\figures\shap_importance.png
+2026-11-26 16:29:22 | INFO     | __main__ | Saved deep learning results
+2026-11-26 16:33:37 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 16:33:37 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 16:33:37 | INFO     | __main__ | Baseline MAE 235.9: validation MAE (2017) of the chosen model, read from model_selection.json
+2026-11-26 16:33:37 | INFO     | __main__ | Reference: 6513 hours (Jan-Sep 2017). Current: 6533 hours (Jan-Sep 2018)
+2026-11-26 16:33:37 | INFO     | __main__ | Simulated incident: traffic x1.30 for 2923 hours from 2018-06-01
+2026-11-26 16:33:38 | WARNING  | __main__ | [Actual 2018] ALERT / Requires investigation: 2018-04 MAE x1.27
+2026-11-26 16:33:38 | WARNING  | __main__ | [Simulated surge] ALERT / Requires investigation: 2018-04 MAE x1.27; 2018-06 MAE x4.29; 2018-07 MAE x4.21; 2018-08 MAE x4.37; 2018-09 MAE x4.18
+2026-11-26 16:33:40 | INFO     | __main__ | Saved figure part3_machine_learning\figures\monitoring_dashboard.png
+2026-11-26 16:33:41 | INFO     | __main__ | Saved monitoring report and status
+2026-11-26 16:35:16 | WARNING  | part3_machine_learning.ml_common | Excluded 20 flagged road-closure hours (traffic_anomaly) from modelling
+2026-11-26 16:35:16 | INFO     | part3_machine_learning.ml_common | Model data: 40555 rows
+2026-11-26 16:35:16 | INFO     | part3_machine_learning.ml_common | Development: 34022 rows (2012-10-02 to 2017-12-31), test: 6533 rows (2018-01-01 to 2018-09-30)
+2026-11-26 16:35:16 | INFO     | __main__ | Overall 2018 regression MAE 213.2 over 6533 hours
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by weather_main: Snow (MAE 498, 2.33x overall, 516 hours)
+2026-11-26 16:35:16 | WARNING  | __main__ | Errors are uneven across weather_main: Snow has 2.3x the overall MAE
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by visibility: Low visibility (MAE 276, 1.30x overall, 1255 hours)
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by time_of_day: Evening peak (MAE 296, 1.39x overall, 1092 hours)
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by day_type: Weekend (MAE 261, 1.23x overall, 1862 hours)
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by holiday_flag: Holiday (MAE 369, 1.73x overall, 167 hours)
+2026-11-26 16:35:16 | WARNING  | __main__ | Errors are uneven across holiday_flag: Holiday has 1.7x the overall MAE
+2026-11-26 16:35:16 | INFO     | __main__ | Largest error by month_name: 04 Apr (MAE 298, 1.40x overall, 720 hours)
+2026-11-26 16:35:16 | INFO     | __main__ | Saved error distribution analysis
+2026-11-26 16:35:50 | INFO     | __main__ | recommender invoked with {'date': '2018-11-14', 'earliest': 6, 'latest': 10, 'window': 1, 'weather': 'Squall', 'temp': None}
+2026-11-26 16:35:54 | WARNING  | __main__ | Low support for Squall on a weekday between 06:00 and 10:00: 0 past hours (minimum 30)
+2026-11-26 16:35:54 | INFO     | __main__ | Recommendation for 2018-11-14 (Squall, weekday): best 10:00-11:00, 28% below busiest
