@@ -1,40 +1,43 @@
-2026-11-26 04:45:27 | INFO     | __main__ | Pipeline started
-2026-11-26 04:45:27 | INFO     | __main__ | Loaded raw file Metro_Interstate_Traffic_Volume.csv: 48204 rows, 9 columns
-2026-11-26 04:45:27 | INFO     | __main__ | Schema validated: all 9 expected columns present
-2026-11-26 04:45:27 | INFO     | __main__ | Column 'weather_main' already consistent, no values changed
-2026-11-26 04:45:27 | WARNING  | __main__ | Standardised spacing or capitalisation of 1730 value(s) in 'weather_description'
-2026-11-26 04:45:27 | WARNING  | __main__ | Filled 48143 missing value(s) in 'holiday' with the label 'None'
-2026-11-26 04:45:27 | INFO     | __main__ | Parsed date_time for 48204 rows, range 2012-10-02 09:00:00 to 2018-09-30 23:00:00
-2026-11-26 04:45:27 | WARNING  | __main__ | Dropped 17 exact duplicate row(s) (identical in every column)
-2026-11-26 04:45:31 | WARNING  | __main__ | Collapsed to hourly grain: removed 7612 row(s); 5430 hour(s) had several weather rows, kept the most severe weather_main for each
-2026-11-26 04:45:31 | INFO     | __main__ | Kept all weather labels in weather_labels: 5349 hour(s) have two or more different conditions
-2026-11-26 04:45:31 | INFO     | __main__ | Hourly table has 40575 unique hours
-2026-11-26 04:45:31 | WARNING  | __main__ | Imputed 10 value(s) in 'temp' with monthly medians: temperature outside 200-330 K (e.g. 0 K sensor errors)
-2026-11-26 04:45:31 | WARNING  | __main__ | Imputed 1 value(s) in 'rain_1h' with the median of the same weather_description: hourly rainfall outside 0-200 mm (e.g. 9,831 mm)
-2026-11-26 04:45:31 | INFO     | __main__ | No invalid values found in 'snow_1h'
-2026-11-26 04:45:31 | INFO     | __main__ | No invalid values found in 'clouds_all'
-2026-11-26 04:45:31 | WARNING  | __main__ | Flagged 20 daytime hour(s) with traffic_volume < 100 as traffic_anomaly (likely road closures, kept but flagged) on 4 day(s): 2015-07-25, 2016-07-09, 2016-07-23, 2016-07-24
-2026-11-26 04:45:31 | WARNING  | __main__ | Extended holiday labels from the midnight hour to the whole day: 53 -> 1203 flagged hours across 53 holiday dates
-2026-11-26 04:45:31 | WARNING  | __main__ | Coverage gap of 10 days with no data, from 2013-10-27 01:00:00 to 2013-11-06 04:00:00 (yearly totals are affected)
-2026-11-26 04:45:31 | WARNING  | __main__ | Coverage gap of 307 days with no data, from 2014-08-08 01:00:00 to 2015-06-11 20:00:00 (yearly totals are affected)
-2026-11-26 04:45:31 | INFO     | __main__ | Time coverage: 40575 of 52551 possible hours present (77.2%)
-2026-11-26 04:45:31 | INFO     | __main__ | Saved cleaned data to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_clean.csv: 40575 rows, 13 columns
-2026-11-26 04:45:31 | INFO     | __main__ | Pipeline finished successfully
-2026-11-26 04:45:55 | DEBUG    | common.data | Read traffic_clean.csv: 40575 rows, 13 columns
-2026-11-26 04:45:55 | INFO     | __main__ | Loaded cleaned data for feature engineering from traffic_clean.csv
-2026-11-26 04:45:55 | INFO     | __main__ | Dataset shape before feature engineering: 40575 rows, 13 columns
-2026-11-26 04:45:55 | INFO     | __main__ | Added time features: hour, day_of_week, is_weekend, month, year, time_of_day and cyclical encodings of hour, day of week and month
-2026-11-26 04:45:56 | INFO     | __main__ | Added weather features: temp_c, weather_severity, is_severe_weather, is_low_visibility, is_precipitation and 11 multi-hot weather columns
-2026-11-26 04:45:56 | INFO     | __main__ | Low-visibility hours: 6737 using all labels vs 3408 using only the most severe label
-2026-11-26 04:45:56 | DEBUG    | __main__ | Weather severity scores: {'Thunderstorm': 10, 'Squall': 9, 'Snow': 8, 'Rain': 7, 'Drizzle': 6, 'Fog': 5, 'Smoke': 4, 'Haze': 3, 'Mist': 2, 'Clouds': 1, 'Clear': 0}
-2026-11-26 04:45:56 | DEBUG    | __main__ | temp_c z-score parameters (training period): mean = 7.790, std = 13.156
-2026-11-26 04:45:56 | DEBUG    | __main__ | clouds_all min-max parameters (training period): min = 0, max = 100
-2026-11-26 04:45:56 | DEBUG    | __main__ | rain_1h before log1p: share of zeros = 0.949, max = 55.63
-2026-11-26 04:45:56 | INFO     | __main__ | Added scaled features: temp_c_z (z-score), clouds_all_mm (min-max), rain_1h_log (log1p); parameters fitted on 25329 training-period hours
-2026-11-26 04:45:56 | DEBUG    | __main__ | Congestion quartile thresholds (training period, 25329 hours): Q1 = 1204.0, Q2 = 3339.0, Q3 = 4932.0
-2026-11-26 04:45:56 | INFO     | __main__ | Created congestion_category from quartiles: {'Low': 9962, 'Medium': 9896, 'High': 10394, 'Severe': 10323}
-2026-11-26 04:45:56 | INFO     | __main__ | Created proxy label high_risk: 3987 positive hours (9.8%)
-2026-11-26 04:45:56 | WARNING  | __main__ | high_risk is imbalanced (9.8% positive); use class weights and precision/recall/F1 rather than accuracy in Part 3
-2026-11-26 04:45:56 | INFO     | __main__ | Dataset shape after feature engineering: 40575 rows, 51 columns
-2026-11-26 04:45:58 | INFO     | __main__ | Saved fitted feature parameters to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\feature_params.json
-2026-11-26 04:45:58 | INFO     | __main__ | Saved features to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_features.csv
+2026-11-26 17:27:45 | INFO     | __main__ | Pipeline started
+2026-11-26 17:27:45 | INFO     | __main__ | Raw file SHA-256 (line endings normalised): 0411ba6c43127a29cefa4d8f39708b9d77979d9dcf895f2d212506fe947b673c
+2026-11-26 17:27:45 | INFO     | __main__ | Loaded raw file Metro_Interstate_Traffic_Volume.csv: 48204 rows, 9 columns
+2026-11-26 17:27:45 | INFO     | __main__ | Schema validated: all 9 expected columns present
+2026-11-26 17:27:45 | INFO     | __main__ | Column 'weather_main' already consistent, no values changed
+2026-11-26 17:27:45 | WARNING  | __main__ | Standardised spacing or capitalisation of 1730 value(s) in 'weather_description'
+2026-11-26 17:27:45 | WARNING  | __main__ | Filled 48143 missing value(s) in 'holiday' with the label 'None'
+2026-11-26 17:27:45 | INFO     | __main__ | Parsed date_time for 48204 rows, range 2012-10-02 09:00:00 to 2018-09-30 23:00:00
+2026-11-26 17:27:45 | WARNING  | __main__ | Dropped 17 exact duplicate row(s) (identical in every column)
+2026-11-26 17:27:46 | WARNING  | __main__ | Collapsed to hourly grain: removed 7612 row(s); 5430 hour(s) had several weather rows, kept the most severe weather_main for each
+2026-11-26 17:27:46 | INFO     | __main__ | Kept all weather labels in weather_labels: 5349 hour(s) have two or more different conditions
+2026-11-26 17:27:46 | INFO     | __main__ | Hourly table has 40575 unique hours
+2026-11-26 17:27:46 | WARNING  | __main__ | Imputed 10 value(s) in 'temp' with monthly medians: temperature outside 200-330 K (e.g. 0 K sensor errors)
+2026-11-26 17:27:46 | WARNING  | __main__ | Imputed 1 value(s) in 'rain_1h' with the median of the same weather_description: hourly rainfall outside 0-200 mm (e.g. 9,831 mm)
+2026-11-26 17:27:46 | INFO     | __main__ | No invalid values found in 'snow_1h'
+2026-11-26 17:27:46 | INFO     | __main__ | No invalid values found in 'clouds_all'
+2026-11-26 17:27:46 | WARNING  | __main__ | Flagged 20 daytime hour(s) with traffic_volume < 100 as traffic_anomaly (likely road closures, kept but flagged) on 4 day(s): 2015-07-25, 2016-07-09, 2016-07-23, 2016-07-24
+2026-11-26 17:27:46 | WARNING  | __main__ | Extended holiday labels from the midnight hour to the whole day: 53 -> 1203 flagged hours across 53 holiday dates
+2026-11-26 17:27:46 | WARNING  | __main__ | Coverage gap of 10 days with no data, from 2013-10-27 01:00:00 to 2013-11-06 04:00:00 (yearly totals are affected)
+2026-11-26 17:27:46 | WARNING  | __main__ | Coverage gap of 307 days with no data, from 2014-08-08 01:00:00 to 2015-06-11 20:00:00 (yearly totals are affected)
+2026-11-26 17:27:46 | INFO     | __main__ | Time coverage: 40575 of 52551 possible hours present (77.2%)
+2026-11-26 17:27:47 | INFO     | __main__ | Saved cleaned data to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_clean.csv: 40575 rows, 13 columns
+2026-11-26 17:27:47 | INFO     | __main__ | Pipeline finished successfully
+2026-11-26 17:27:47 | INFO     | __main__ | Saved data quality report to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\quality_report.json
+2026-11-26 17:27:48 | INFO     | __main__ | Loaded cleaned data for feature engineering from traffic_clean.csv
+2026-11-26 17:27:48 | INFO     | __main__ | Dataset shape before feature engineering: 40575 rows, 13 columns
+2026-11-26 17:27:48 | INFO     | __main__ | Added time features: hour, day_of_week, is_weekend, month, year, time_of_day and cyclical encodings of hour, day of week and month
+2026-11-26 17:27:49 | INFO     | __main__ | Added weather features: temp_c, weather_severity, is_severe_weather, is_low_visibility, is_precipitation and 11 multi-hot weather columns
+2026-11-26 17:27:49 | INFO     | __main__ | Low-visibility hours: 6737 using all labels vs 3408 using only the most severe label
+2026-11-26 17:27:49 | INFO     | __main__ | Added scaled features: temp_c_z (z-score), clouds_all_mm (min-max), rain_1h_log (log1p); parameters fitted on 25329 training-period hours
+2026-11-26 17:27:49 | INFO     | __main__ | Created congestion_category from quartiles: {'Low': 9962, 'Medium': 9896, 'High': 10394, 'Severe': 10323}
+2026-11-26 17:27:49 | INFO     | __main__ | Created proxy label high_risk: 3987 positive hours (9.8%)
+2026-11-26 17:27:49 | WARNING  | __main__ | high_risk is imbalanced (9.8% positive); use class weights and precision/recall/F1 rather than accuracy in Part 3
+2026-11-26 17:27:49 | INFO     | __main__ | Dataset shape after feature engineering: 40575 rows, 51 columns
+2026-11-26 17:27:50 | INFO     | __main__ | Saved fitted feature parameters to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\feature_params.json
+2026-11-26 17:27:50 | INFO     | __main__ | Saved features to C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\data\processed\traffic_features.csv
+2026-11-26 17:27:51 | INFO     | __main__ | Loaded features for visualisation: 40575 rows
+2026-11-26 17:27:52 | INFO     | __main__ | Saved figure part2_python\figures\fig1_hourly_profile_weekday_weekend.png
+2026-11-26 17:27:52 | INFO     | __main__ | Saved figure part2_python\figures\fig2_traffic_distribution.png
+2026-11-26 17:27:52 | INFO     | __main__ | Saved figure part2_python\figures\fig3_congestion_by_weather_peak_vs_all.png
+2026-11-26 17:27:52 | INFO     | __main__ | Saved figure part2_python\figures\fig4_heatmap_hour_by_day.png
+2026-11-26 17:27:53 | INFO     | __main__ | Saved figure part2_python\figures\fig5_temperature_vs_traffic.png
+2026-11-26 17:27:53 | INFO     | __main__ | All 5 figures saved to part2_python\figures

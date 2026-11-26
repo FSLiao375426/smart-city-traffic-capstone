@@ -60,3 +60,21 @@
 2026-11-26 16:35:38 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Content"
 2026-11-26 16:35:38 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Content"
 2026-11-26 16:35:38 | INFO     | __main__ | Saved API examples to api_examples.json
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | POST /predict {'date_time': '2018-10-02 08:00', 'weather_main': 'Clear', 'temp_c': 12.0}
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | Prediction 2018-10-02 08:00 -> 5900 vehicles (High)
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 200 OK"
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | POST /predict {'date_time': '2018-10-02 03:00', 'weather_main': 'Clear', 'temp_c': None}
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | Prediction 2018-10-02 03:00 -> 351 vehicles (Low)
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 200 OK"
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | POST /predict {'date_time': '2018-12-25 08:00', 'weather_main': 'Snow', 'temp_c': -8.0}
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | Prediction 2018-12-25 08:00 -> 709 vehicles (Low)
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 200 OK"
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | POST /recommend {'date': '2018-10-02', 'earliest': 6, 'latest': 10, 'window': 1, 'weather_main': 'Clear', 'temp_c': None}
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.recommender | Recommendation for 2018-10-02 (Clear, weekday): best 10:00-11:00, 30% below busiest
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/recommend "HTTP/1.1 200 OK"
+2026-11-26 17:30:44 | INFO     | part3_machine_learning.api | POST /predict {'date_time': '02/10/2018 8am', 'weather_main': 'Clear', 'temp_c': None}
+2026-11-26 17:30:44 | ERROR    | part3_machine_learning.api | Invalid date_time '02/10/2018 8am'
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Content"
+2026-11-26 17:30:44 | INFO     | httpx2 | HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Content"
+2026-11-26 17:30:44 | INFO     | __main__ | Saved API examples to api_examples.json

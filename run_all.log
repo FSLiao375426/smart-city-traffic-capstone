@@ -1,0 +1,42 @@
+2026-11-26 17:27:35 | INFO     | __main__ | Running 14 steps (LSTM skipped)
+2026-11-26 17:27:35 | INFO     | __main__ | [1/14] Unit tests: python -m unittest discover -s tests -t . -q
+2026-11-26 17:27:44 | INFO     | __main__ | [1/14] Unit tests finished in 9s
+2026-11-26 17:27:44 | INFO     | __main__ | [2/14] Part 2: cleaning pipeline: python -m part2_python.pipeline
+2026-11-26 17:27:47 | INFO     | __main__ | [2/14] Part 2: cleaning pipeline finished in 3s
+2026-11-26 17:27:47 | INFO     | __main__ | [3/14] Part 2: feature engineering: python -m part2_python.feature_engineering
+2026-11-26 17:27:50 | INFO     | __main__ | [3/14] Part 2: feature engineering finished in 3s
+2026-11-26 17:27:50 | INFO     | __main__ | [4/14] Part 2: figures: python -m part2_python.visualizations
+2026-11-26 17:27:53 | INFO     | __main__ | [4/14] Part 2: figures finished in 3s
+2026-11-26 17:27:53 | INFO     | __main__ | [5/14] Part 1: load SQLite: python -m part1_data_analytics.load_sqlite
+2026-11-26 17:27:54 | INFO     | __main__ | [5/14] Part 1: load SQLite finished in 2s
+2026-11-26 17:27:54 | INFO     | __main__ | [6/14] Part 1: SQL analysis: python -m part1_data_analytics.run_sql_analysis
+2026-11-26 17:27:56 | INFO     | __main__ | [6/14] Part 1: SQL analysis finished in 2s
+2026-11-26 17:27:56 | INFO     | __main__ | [7/14] Part 1: statistics and probability: python -m part1_data_analytics.stats_probability
+2026-11-26 17:27:59 | INFO     | __main__ | [7/14] Part 1: statistics and probability finished in 3s
+2026-11-26 17:27:59 | INFO     | __main__ | [8/14] Part 2: CLI example: python -m part2_python.traffic_app compare
+2026-11-26 17:28:01 | INFO     | __main__ | [8/14] Part 2: CLI example finished in 1s
+2026-11-26 17:28:01 | INFO     | __main__ | [9/14] Part 3: supervised models: python -m part3_machine_learning.supervised
+2026-11-26 17:29:33 | INFO     | __main__ | [9/14] Part 3: supervised models finished in 92s
+2026-11-26 17:29:33 | INFO     | __main__ | [10/14] Part 3: clustering and association rules: python -m part3_machine_learning.unsupervised
+2026-11-26 17:30:04 | INFO     | __main__ | [10/14] Part 3: clustering and association rules finished in 31s
+2026-11-26 17:30:04 | INFO     | __main__ | [11/14] Part 3: monitoring: python -m part3_machine_learning.monitoring
+2026-11-26 17:30:23 | INFO     | __main__ | [11/14] Part 3: monitoring finished in 20s
+2026-11-26 17:30:23 | INFO     | __main__ | [12/14] Part 3: error distribution: python -m part3_machine_learning.fairness_analysis
+2026-11-26 17:30:34 | INFO     | __main__ | [12/14] Part 3: error distribution finished in 10s
+2026-11-26 17:30:34 | INFO     | __main__ | [13/14] Part 3: API demo: python -m part3_machine_learning.api_demo
+2026-11-26 17:30:45 | INFO     | __main__ | [13/14] Part 3: API demo finished in 11s
+2026-11-26 17:30:45 | INFO     | __main__ | [14/14] Part 3: recommender example: python -m part3_machine_learning.recommender --date 2018-12-25 --earliest 8 --latest 18 --window 2
+2026-11-26 17:30:56 | ERROR    | __main__ | [14/14] Part 3: recommender example failed with exit code 1 after 11s. Last output:
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\part3_machine_learning\recommender.py", line 195, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\part3_machine_learning\recommender.py", line 190, in main
+    print(f"    {h:02d}:00  {v:>6,}  {bar}")
+  File "C:\Users\f_s_l\anaconda3\envs\capstone\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 19-24: character maps to <undefined>
+2026-11-26 17:30:56 | ERROR    | __main__ | Stopped at 'Part 3: recommender example'. Fix it and run again; see that step's own log for details.

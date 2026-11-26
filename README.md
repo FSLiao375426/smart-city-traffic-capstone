@@ -40,6 +40,14 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+`requirements.txt` lists the minimum versions. `requirements-lock.txt` pins the exact versions every
+result in this repository was produced with (Windows, Python 3.11, conda environment `capstone`).
+To reproduce the numbers exactly, install from the lock file instead:
+
+```bash
+pip install -r requirements-lock.txt
+```
+
 All scripts are run **from the repository root** with `python -m`, so the shared `common` package is importable.
 
 ## Decision log
@@ -93,14 +101,28 @@ uvicorn part3_machine_learning.api:app --port 8000      # API, then open http://
 
 The Power BI dashboard is `part1_data_analytics/powerbi/traffic_dashboard.pbix`, with a PDF export next to it.
 
+### One command for everything
+
+```bash
+python run_all.py               # every step below in order, stops at the first failure
+python run_all.py --skip-slow   # the same without the LSTM step
+python run_all.py --list        # show the steps
+```
+
+`run_all.py` writes a summary to `run_all.log`; each step keeps its own log.
+
 ### Tests
+
+[![tests](https://github.com/FSLiao375426/smart-city-traffic-capstone/actions/workflows/tests.yml/badge.svg)](https://github.com/FSLiao375426/smart-city-traffic-capstone/actions/workflows/tests.yml)
 
 ```bash
 python -m unittest discover -s tests -t . -v
 ```
 
-26 unit tests on small hand-made tables (no data files needed, under a second). They cover the
-hourly collapse (traffic is never summed, every weather label is kept), imputation by month,
+GitHub Actions runs the same tests after every push (`.github/workflows/tests.yml`).
+
+27 unit tests on small hand-made tables (no data files needed, under a second). They cover the raw-file
+fingerprint, the hourly collapse (traffic is never summed, every weather label is kept), imputation by month,
 closure flags, holiday extension, cyclical encoding, training-only quartile thresholds,
 the proxy risk label, the three-way chronological split, the model selection rule, and
 input checks in the CLI and the recommender.

@@ -9,7 +9,7 @@
       "test_MAE": 1728.1483,
       "test_RMSE": 1974.8049,
       "test_R2": -0.0004,
-      "fit_seconds": 0.0022
+      "fit_seconds": 0.002
     },
     {
       "model": "Linear regression",
@@ -20,7 +20,7 @@
       "test_MAE": 806.1028,
       "test_RMSE": 1017.2455,
       "test_R2": 0.7346,
-      "fit_seconds": 0.0549
+      "fit_seconds": 0.0771
     },
     {
       "model": "Random forest",
@@ -31,7 +31,7 @@
       "test_MAE": 220.4366,
       "test_RMSE": 372.2229,
       "test_R2": 0.9645,
-      "fit_seconds": 14.0792
+      "fit_seconds": 10.4743
     },
     {
       "model": "Gradient boosting",
@@ -42,7 +42,7 @@
       "test_MAE": 213.2257,
       "test_RMSE": 350.0819,
       "test_R2": 0.9686,
-      "fit_seconds": 7.1542
+      "fit_seconds": 3.8044
     }
   ],
   "classification": [
@@ -59,7 +59,7 @@
       "test_recall": 0.0,
       "test_F1": 0.0,
       "test_ROC_AUC": 0.5,
-      "fit_seconds": 0.0121
+      "fit_seconds": 0.004
     },
     {
       "model": "Logistic regression",
@@ -74,7 +74,7 @@
       "test_recall": 0.9794,
       "test_F1": 0.7291,
       "test_ROC_AUC": 0.9822,
-      "fit_seconds": 0.3393
+      "fit_seconds": 0.215
     },
     {
       "model": "Random forest",
@@ -89,7 +89,7 @@
       "test_recall": 0.9959,
       "test_F1": 0.9264,
       "test_ROC_AUC": 0.9973,
-      "fit_seconds": 1.6268
+      "fit_seconds": 1.9601
     },
     {
       "model": "Gradient boosting",
@@ -104,7 +104,7 @@
       "test_recall": 0.9835,
       "test_F1": 0.931,
       "test_ROC_AUC": 0.998,
-      "fit_seconds": 2.4896
+      "fit_seconds": 2.4372
     }
   ],
   "train_period": "2012-10-02 to 2016-12-31",

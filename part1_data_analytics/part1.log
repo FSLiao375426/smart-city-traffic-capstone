@@ -1,54 +1,27 @@
-2026-11-23 12:43:11 | INFO     | __main__ | Loaded traffic_raw: 48204 rows, 9 columns
-2026-11-23 12:43:11 | INFO     | __main__ | Loaded traffic_clean: 40575 rows, 12 columns
-2026-11-23 12:43:11 | INFO     | __main__ | Created view traffic_hourly (D1 collapse rule in SQL)
-2026-11-23 12:43:11 | INFO     | __main__ | traffic_raw: 48204 rows, 9 columns, 2012-10-02 09:00:00 to 2018-09-30 23:00:00
-2026-11-23 12:43:11 | INFO     | __main__ | traffic_raw NULL counts (holiday, temp, weather_main, date_time, traffic_volume): (0, 0, 0, 0, 0)
-2026-11-23 12:43:12 | WARNING  | __main__ | traffic_raw has 48204 rows but only 40575 distinct hours (7629 repeated rows)
-2026-11-23 12:43:12 | INFO     | __main__ | Hours: SQL view 40575, Python pipeline 40575
-2026-11-23 12:43:12 | INFO     | __main__ | Total volume: raw 157136284, SQL view 133518143, Python pipeline 133518143
-2026-11-23 12:43:12 | WARNING  | __main__ | Summing traffic_raw would overstate total volume by 23618141 vehicles (17.7%) because of repeated hours
-2026-11-23 12:43:12 | INFO     | __main__ | Consistency check passed: SQL and Python agree on hours and total volume
-2026-11-23 12:43:12 | INFO     | __main__ | Database ready at C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\part1_data_analytics\traffic.db
-2026-11-23 12:43:44 | INFO     | __main__ | Found 7 named queries in traffic_analysis.sql
-2026-11-23 12:43:45 | INFO     | __main__ | Query '1_1_load_verification' returned 3 rows, saved to part1_data_analytics\results\1_1_load_verification.csv
-2026-11-23 12:43:45 | INFO     | __main__ | Query '1_1_rows_per_month' returned 63 rows, saved to part1_data_analytics\results\1_1_rows_per_month.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Query '1_2_annual_traffic' returned 6 rows, saved to part1_data_analytics\results\1_2_annual_traffic.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Query '1_2_raw_vs_hourly_totals' returned 6 rows, saved to part1_data_analytics\results\1_2_raw_vs_hourly_totals.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Query '1_3_holiday_temperature' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_temperature.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Query '1_3_holiday_year_on_year' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_year_on_year.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Query '1_3_holiday_vs_normal_days' returned 4 rows, saved to part1_data_analytics\results\1_3_holiday_vs_normal_days.csv
-2026-11-23 12:43:46 | INFO     | __main__ | Wrote combined results to part1_data_analytics\results\sql_results.md
-2026-11-23 12:44:00 | INFO     | __main__ | Loaded traffic_clean from SQLite: 40575 rows
-2026-11-23 12:44:00 | INFO     | __main__ | Traffic volume: mean 3290.7, median 3427.0, std 1984.8, range 7280
-2026-11-23 12:44:00 | INFO     | __main__ | Pearson r(temp, volume) = 0.140 (r^2 = 0.019); after removing hour-of-day effect r = 0.090
-2026-11-23 12:44:00 | INFO     | __main__ | Odds ratio adjusted for hour of day (Mantel-Haenszel) = 1.006
-2026-11-23 12:44:00 | INFO     | __main__ | P(C) = 0.1505, P(Clear) = 0.3294, P(C and Clear) = 0.0434 vs 0.0496 if independent
-2026-11-23 12:44:00 | INFO     | __main__ | Odds ratio of congestion, clear vs cloudy = 0.736 (95% CI 0.690-0.786)
-2026-11-23 12:44:00 | INFO     | __main__ | Saved statistics and probability results to part1_data_analytics\results\stats_probability.md
-2026-11-23 13:21:29 | INFO     | __main__ | Found 7 named queries in traffic_analysis.sql
-2026-11-23 13:21:30 | INFO     | __main__ | Query '1_1_load_verification' returned 3 rows, saved to part1_data_analytics\results\1_1_load_verification.csv
-2026-11-23 13:21:30 | INFO     | __main__ | Query '1_1_rows_per_month' returned 63 rows, saved to part1_data_analytics\results\1_1_rows_per_month.csv
-2026-11-23 13:21:30 | INFO     | __main__ | Query '1_2_annual_traffic' returned 6 rows, saved to part1_data_analytics\results\1_2_annual_traffic.csv
-2026-11-23 13:21:31 | INFO     | __main__ | Query '1_2_raw_vs_hourly_totals' returned 6 rows, saved to part1_data_analytics\results\1_2_raw_vs_hourly_totals.csv
-2026-11-23 13:21:31 | INFO     | __main__ | Query '1_3_holiday_temperature' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_temperature.csv
-2026-11-23 13:21:31 | INFO     | __main__ | Query '1_3_holiday_year_on_year' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_year_on_year.csv
-2026-11-23 13:21:31 | INFO     | __main__ | Query '1_3_holiday_vs_normal_days' returned 4 rows, saved to part1_data_analytics\results\1_3_holiday_vs_normal_days.csv
-2026-11-23 13:21:31 | INFO     | __main__ | Wrote combined results to part1_data_analytics\results\sql_results.md
-2026-11-23 13:22:46 | INFO     | __main__ | Found 7 named queries in traffic_analysis.sql
-2026-11-23 13:22:47 | INFO     | __main__ | Query '1_1_load_verification' returned 3 rows, saved to part1_data_analytics\results\1_1_load_verification.csv
-2026-11-23 13:22:47 | INFO     | __main__ | Query '1_1_rows_per_month' returned 63 rows, saved to part1_data_analytics\results\1_1_rows_per_month.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Query '1_2_annual_traffic' returned 6 rows, saved to part1_data_analytics\results\1_2_annual_traffic.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Query '1_2_raw_vs_hourly_totals' returned 6 rows, saved to part1_data_analytics\results\1_2_raw_vs_hourly_totals.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Query '1_3_holiday_temperature' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_temperature.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Query '1_3_holiday_year_on_year' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_year_on_year.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Query '1_3_holiday_vs_normal_days' returned 4 rows, saved to part1_data_analytics\results\1_3_holiday_vs_normal_days.csv
-2026-11-23 13:22:48 | INFO     | __main__ | Wrote combined results to part1_data_analytics\results\sql_results.md
-2026-11-23 13:23:43 | INFO     | __main__ | Found 7 named queries in traffic_analysis.sql
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_1_load_verification' returned 3 rows, saved to part1_data_analytics\results\1_1_load_verification.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_1_rows_per_month' returned 63 rows, saved to part1_data_analytics\results\1_1_rows_per_month.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_2_annual_traffic' returned 6 rows, saved to part1_data_analytics\results\1_2_annual_traffic.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_2_raw_vs_hourly_totals' returned 6 rows, saved to part1_data_analytics\results\1_2_raw_vs_hourly_totals.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_3_holiday_temperature' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_temperature.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_3_holiday_year_on_year' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_year_on_year.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Query '1_3_holiday_vs_normal_days' returned 4 rows, saved to part1_data_analytics\results\1_3_holiday_vs_normal_days.csv
-2026-11-23 13:23:44 | INFO     | __main__ | Wrote combined results to part1_data_analytics\results\sql_results.md
+2026-11-26 17:27:54 | INFO     | __main__ | Loaded traffic_raw: 48204 rows, 9 columns
+2026-11-26 17:27:54 | INFO     | __main__ | Loaded traffic_clean: 40575 rows, 13 columns
+2026-11-26 17:27:54 | INFO     | __main__ | Created view traffic_hourly (D1 collapse rule in SQL)
+2026-11-26 17:27:54 | INFO     | __main__ | traffic_raw: 48204 rows, 9 columns, 2012-10-02 09:00:00 to 2018-09-30 23:00:00
+2026-11-26 17:27:54 | INFO     | __main__ | traffic_raw NULL counts (holiday, temp, weather_main, date_time, traffic_volume): (0, 0, 0, 0, 0)
+2026-11-26 17:27:54 | WARNING  | __main__ | traffic_raw has 48204 rows but only 40575 distinct hours (7629 repeated rows)
+2026-11-26 17:27:54 | INFO     | __main__ | Hours: SQL view 40575, Python pipeline 40575
+2026-11-26 17:27:54 | INFO     | __main__ | Total volume: raw 157136284, SQL view 133518143, Python pipeline 133518143
+2026-11-26 17:27:54 | WARNING  | __main__ | Summing traffic_raw would overstate total volume by 23618141 vehicles (17.7%) because of repeated hours
+2026-11-26 17:27:54 | INFO     | __main__ | Consistency check passed: SQL and Python agree on hours and total volume
+2026-11-26 17:27:54 | INFO     | __main__ | Database ready at C:\Users\f_s_l\Documents\GitHub\smart-city-traffic-capstone\part1_data_analytics\traffic.db
+2026-11-26 17:27:55 | INFO     | __main__ | Found 7 named queries in traffic_analysis.sql
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_1_load_verification' returned 3 rows, saved to part1_data_analytics\results\1_1_load_verification.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_1_rows_per_month' returned 63 rows, saved to part1_data_analytics\results\1_1_rows_per_month.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_2_annual_traffic' returned 6 rows, saved to part1_data_analytics\results\1_2_annual_traffic.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_2_raw_vs_hourly_totals' returned 6 rows, saved to part1_data_analytics\results\1_2_raw_vs_hourly_totals.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_3_holiday_temperature' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_temperature.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_3_holiday_year_on_year' returned 8 rows, saved to part1_data_analytics\results\1_3_holiday_year_on_year.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Query '1_3_holiday_vs_normal_days' returned 4 rows, saved to part1_data_analytics\results\1_3_holiday_vs_normal_days.csv
+2026-11-26 17:27:56 | INFO     | __main__ | Wrote combined results to part1_data_analytics\results\sql_results.md
+2026-11-26 17:27:59 | INFO     | __main__ | Loaded traffic_clean from SQLite: 40575 rows
+2026-11-26 17:27:59 | INFO     | __main__ | Traffic volume: mean 3290.7, median 3427.0, std 1984.8, range 7280
+2026-11-26 17:27:59 | INFO     | __main__ | Pearson r(temp, volume) = 0.140 (r^2 = 0.019); after removing hour-of-day effect r = 0.090
+2026-11-26 17:27:59 | INFO     | __main__ | Odds ratio adjusted for hour of day (Mantel-Haenszel) = 1.006
+2026-11-26 17:27:59 | INFO     | __main__ | P(C) = 0.1505, P(Clear) = 0.3294, P(C and Clear) = 0.0434 vs 0.0496 if independent
+2026-11-26 17:27:59 | INFO     | __main__ | Odds ratio of congestion, clear vs cloudy = 0.736 (95% CI 0.690-0.786)
+2026-11-26 17:27:59 | INFO     | __main__ | Saved statistics and probability results to part1_data_analytics\results\stats_probability.md

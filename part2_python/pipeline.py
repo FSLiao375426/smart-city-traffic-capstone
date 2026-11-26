@@ -14,8 +14,11 @@ so pipeline.log reads as a step-by-step audit trail.
 """
 
 import argparse
+import hashlib
+import json
 import logging
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -399,21 +402,79 @@ def final_checks_and_save(df: pd.DataFrame, output: Path) -> None:
 # ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
-def run_pipeline(input_path: Path, output_path: Path) -> None:
-    """Run every step in order."""
+def sha256_of(path: Path) -> str:
+    """Fingerprint of a text file: any change to its content changes this value.
+
+    Line endings are normalised first (Windows CRLF -> LF), because Git may
+    check the same CSV out with different line endings on different systems.
+    """
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def changed_cells(before: pd.DataFrame, after: pd.DataFrame, columns: list) -> dict:
+    """Number of values each step changed, per column (rows are aligned on date_time)."""
+    b, a = before.set_index("date_time"), after.set_index("date_time")
+    return {c: int((b[c] != a[c]).sum()) for c in columns}
+
+
+def write_quality_report(report: dict, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    logger.info("Saved data quality report to %s", path)
+
+
+def run_pipeline(input_path: Path, output_path: Path) -> dict:
+    """Run every step in order and return a data quality report (B2).
+
+    The report records the raw file's SHA-256 fingerprint, so anyone can check
+    they started from the same file, and how many rows or values each step
+    removed, changed or flagged.
+    """
     logger.info("Pipeline started")
+    raw_hash = sha256_of(input_path) if input_path.exists() else None
+    if raw_hash:
+        logger.info("Raw file SHA-256 (line endings normalised): %s", raw_hash)
     df = load_raw(input_path)
+    report = {"generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+              "raw_file": {"name": input_path.name, "sha256_normalised_line_endings": raw_hash,
+                           "rows": int(df.shape[0]), "columns": int(df.shape[1])},
+              "steps": []}
+
+    def record(step: str, rows: int, **details) -> None:
+        report["steps"].append({"step": step, "rows_after": int(rows), **details})
+
     validate_schema(df)
+    record("validate_schema", len(df), missing_columns=0)
     df = standardise_categoricals(df)
+    record("standardise_categoricals", len(df))
+    before = len(df)
     df = parse_datetimes(df)
+    record("parse_datetimes", len(df), rows_dropped=before - len(df))
+    before = len(df)
     df = drop_exact_duplicates(df)
+    record("drop_exact_duplicates", len(df), rows_dropped=before - len(df))
+    before = len(df)
     df = collapse_to_hourly(df)
+    record("collapse_to_hourly", len(df), rows_merged=before - len(df),
+           hours_with_several_conditions=int(df["weather_labels"].str.contains("|", regex=False).sum()))
+    before_values = df
     df = handle_impossible_values(df)
+    record("handle_impossible_values", len(df),
+           values_imputed=changed_cells(before_values, df, ["temp", "rain_1h", "snow_1h", "clouds_all"]))
     df = flag_traffic_anomalies(df)
+    record("flag_traffic_anomalies", len(df), hours_flagged=int(df["traffic_anomaly"].sum()),
+           traffic_values_changed=0)
     df = extend_holidays(df)
+    record("extend_holidays", len(df), holiday_hours=int(df["is_holiday"].sum()))
     report_coverage_gaps(df)
+    span = int((df["date_time"].max() - df["date_time"].min()) / pd.Timedelta(hours=1)) + 1
+    record("report_coverage_gaps", len(df), hours_present=len(df), hours_possible=span,
+           coverage=round(len(df) / span, 4))
     final_checks_and_save(df, output_path)
+    report["output_file"] = {"name": output_path.name, "rows": int(len(df)),
+                             "period": f"{df['date_time'].min()} to {df['date_time'].max()}"}
     logger.info("Pipeline finished successfully")
+    return report
 
 
 def parse_args(argv=None) -> argparse.Namespace:
@@ -429,7 +490,8 @@ def main(argv=None) -> int:
     args = parse_args(argv)
     setup_logging(args.log_file, debug=args.debug)
     try:
-        run_pipeline(args.input, args.output)
+        report = run_pipeline(args.input, args.output)
+        write_quality_report(report, args.output.parent / config.QUALITY_REPORT_JSON.name)
     except PipelineError:
         logger.error("Pipeline stopped before completion", exc_info=True)
         return 1

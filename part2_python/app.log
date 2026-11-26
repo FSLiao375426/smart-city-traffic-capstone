@@ -10,3 +10,5 @@
 2026-11-23 19:48:27 | ERROR    | __main__ | Invalid input for 'query': No record for 2015-01-01 08:00: the sensor has no data for that hour (for example the Sep 2014 - May 2015 gap)
 2026-11-23 19:49:03 | INFO     | __main__ | Command 'query' invoked with arguments {'datetime': '2017-13-01 8am'}
 2026-11-23 19:49:03 | ERROR    | __main__ | Invalid input for 'query': Invalid date/time '2017-13-01 8am'. Use the format YYYY-MM-DD HH:MM, e.g. 2017-06-01 08:00
+2026-11-26 17:28:00 | INFO     | __main__ | Command 'compare' invoked with arguments {}
+2026-11-26 17:28:01 | INFO     | __main__ | compare answered

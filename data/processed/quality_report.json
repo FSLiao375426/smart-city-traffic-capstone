@@ -1,0 +1,69 @@
+{
+  "generated_utc": "2026-11-26T09:27:45+00:00",
+  "raw_file": {
+    "name": "Metro_Interstate_Traffic_Volume.csv",
+    "sha256_normalised_line_endings": "0411ba6c43127a29cefa4d8f39708b9d77979d9dcf895f2d212506fe947b673c",
+    "rows": 48204,
+    "columns": 9
+  },
+  "steps": [
+    {
+      "step": "validate_schema",
+      "rows_after": 48204,
+      "missing_columns": 0
+    },
+    {
+      "step": "standardise_categoricals",
+      "rows_after": 48204
+    },
+    {
+      "step": "parse_datetimes",
+      "rows_after": 48204,
+      "rows_dropped": 0
+    },
+    {
+      "step": "drop_exact_duplicates",
+      "rows_after": 48187,
+      "rows_dropped": 17
+    },
+    {
+      "step": "collapse_to_hourly",
+      "rows_after": 40575,
+      "rows_merged": 7612,
+      "hours_with_several_conditions": 5349
+    },
+    {
+      "step": "handle_impossible_values",
+      "rows_after": 40575,
+      "values_imputed": {
+        "temp": 10,
+        "rain_1h": 1,
+        "snow_1h": 0,
+        "clouds_all": 0
+      }
+    },
+    {
+      "step": "flag_traffic_anomalies",
+      "rows_after": 40575,
+      "hours_flagged": 20,
+      "traffic_values_changed": 0
+    },
+    {
+      "step": "extend_holidays",
+      "rows_after": 40575,
+      "holiday_hours": 1203
+    },
+    {
+      "step": "report_coverage_gaps",
+      "rows_after": 40575,
+      "hours_present": 40575,
+      "hours_possible": 52551,
+      "coverage": 0.7721
+    }
+  ],
+  "output_file": {
+    "name": "traffic_clean.csv",
+    "rows": 40575,
+    "period": "2012-10-02 09:00:00 to 2018-09-30 23:00:00"
+  }
+}

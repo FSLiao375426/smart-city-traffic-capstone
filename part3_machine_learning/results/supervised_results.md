@@ -7,9 +7,9 @@ Training 2012-2016, validation 2017 (model choice), test Jan-Sep 2018 (scored on
 | model                 | selected   |   valid_MAE |   valid_R2 |   test_MAE |   test_RMSE |   test_R2 |   fit_seconds |
 |:----------------------|:-----------|------------:|-----------:|-----------:|------------:|----------:|--------------:|
 | Dummy (training mean) |            |    1744.24  |     -0.004 |   1728.15  |    1974.81  |    -0     |         0.002 |
-| Linear regression     |            |     801.583 |      0.73  |    806.103 |    1017.25  |     0.735 |         0.055 |
-| Random forest         |            |     239.458 |      0.963 |    220.437 |     372.223 |     0.964 |        14.079 |
-| Gradient boosting     | yes        |     235.891 |      0.965 |    213.226 |     350.082 |     0.969 |         7.154 |
+| Linear regression     |            |     801.583 |      0.73  |    806.103 |    1017.25  |     0.735 |         0.077 |
+| Random forest         |            |     239.458 |      0.963 |    220.437 |     372.223 |     0.964 |        10.474 |
+| Gradient boosting     | yes        |     235.891 |      0.965 |    213.226 |     350.082 |     0.969 |         3.804 |
 
 ## Classification: high_risk (proxy label)
 

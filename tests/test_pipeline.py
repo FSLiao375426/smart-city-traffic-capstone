@@ -1,6 +1,8 @@
 """Part 2 pipeline: schema check, hourly collapse, imputation, flags and holidays."""
 
+import tempfile
 import unittest
+from pathlib import Path
 
 import pandas as pd
 
@@ -19,6 +21,17 @@ class SchemaTest(unittest.TestCase):
         df = raw_rows([("2016-01-01 08:00", "Clear", 3000)])
         with self.assertLogs(pipeline.logger, level="INFO"):
             pipeline.validate_schema(df)
+
+
+class FingerprintTest(unittest.TestCase):
+    def test_same_content_same_hash_whatever_the_line_endings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            unix, windows, other = Path(tmp, "a.csv"), Path(tmp, "b.csv"), Path(tmp, "c.csv")
+            unix.write_bytes(b"x,y\n1,2\n")
+            windows.write_bytes(b"x,y\r\n1,2\r\n")
+            other.write_bytes(b"x,y\n1,3\n")
+            self.assertEqual(pipeline.sha256_of(unix), pipeline.sha256_of(windows))
+            self.assertNotEqual(pipeline.sha256_of(unix), pipeline.sha256_of(other))
 
 
 class ParseDatetimeTest(unittest.TestCase):

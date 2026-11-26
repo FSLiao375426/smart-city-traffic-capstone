@@ -103,6 +103,9 @@ TEST_START = "2018-01-01"
 # and test years never influence how features or labels are defined.
 FEATURE_PARAMS_JSON = DATA_DIR / "processed" / "feature_params.json"
 
+# Data quality report written by the pipeline: raw file fingerprint and what each step changed
+QUALITY_REPORT_JSON = DATA_DIR / "processed" / "quality_report.json"
+
 # --------------------------------------------------------------------------
 # Part 3 association rules (Apriori)
 # --------------------------------------------------------------------------
